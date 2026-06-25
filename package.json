@@ -10,13 +10,15 @@
     "build": "bun run --filter @campfire/web build",
     "start": "bun run --filter @campfire/web start",
     "format": "prettier --write .",
-    "lint": "bun run --filter @campfire/web lint"
+    "lint": "bun run --filter @campfire/web lint",
+    "generate:keys": "node generatekeys.mjs"
   },
   "devDependencies": {
     "@convex-dev/eslint-plugin": "^2.0.0",
     "@tanstack/eslint-config": "^0.4.0",
     "convex": "^1.36.1",
     "eslint": "^10.5.0",
+    "jose": "^6.0.6",
     "prettier": "^3.8.4"
   }
 }

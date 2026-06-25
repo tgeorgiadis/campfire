@@ -1,0 +1,23 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "installCommand": "bun install",
+  "buildCommand": "cd packages/backend && npx convex deploy --cmd-url-env-var-name VITE_CONVEX_URL --cmd 'cd ../.. && bun run build'",
+  "outputDirectory": "apps/web/dist/client",
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "headers": [
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    }
+  ],
+  "rewrites": [
+    { "source": "/", "destination": "/_shell" },
+    { "source": "/:path((?!.*\\..*).*)", "destination": "/_shell" }
+  ]
+}

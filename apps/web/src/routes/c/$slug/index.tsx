@@ -1,10 +1,11 @@
-import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import { createFileRoute, useLocation, useNavigate } from '@tanstack/react-router'
 import { useConvexAuth, useMutation, usePaginatedQuery, useQuery } from 'convex/react'
 import { useEffect, useState } from 'react'
 import { api } from '@campfire/backend/convex/_generated/api'
 import {
   buildJoinUrl,
   getGuestToken,
+  setGuestToken,
   uploadPhoto,
 } from '@campfire/app-core'
 import {
@@ -15,7 +16,6 @@ import {
 import type { CampfireView, PhotoItem } from '@campfire/app-core'
 import { QrCanvas } from '~/lib/QrCanvas'
 import { WebFileInput } from '~/lib/WebFileInput'
-import '~/lib/initGuestToken'
 
 export const Route = createFileRoute('/c/$slug/')({
   ssr: false,
@@ -25,20 +25,23 @@ export const Route = createFileRoute('/c/$slug/')({
 function CampfireBoard() {
   const { slug } = Route.useParams()
   const navigate = useNavigate()
-  const [guestTokenReady, setGuestTokenReady] = useState(false)
-  const [guestToken, setGuestTokenState] = useState<string | undefined>(undefined)
+  const location = useLocation()
+  const stateToken = location.state.guestToken
 
   useEffect(() => {
-    setGuestTokenState(getGuestToken(slug) ?? undefined)
-    setGuestTokenReady(true)
-  }, [slug])
+    if (stateToken) {
+      setGuestToken(slug, stateToken)
+    }
+  }, [slug, stateToken])
+
+  const guestToken = stateToken ?? getGuestToken(slug) ?? undefined
 
   const campfire = useQuery(api.campfires.getBySlug, {
     slug,
-    guestToken: guestTokenReady ? guestToken : undefined,
+    guestToken,
   })
 
-  if (!guestTokenReady || campfire === undefined) {
+  if (campfire === undefined) {
     return <LoadingScreen />
   }
 
@@ -123,6 +126,7 @@ function CampfireBoardContainer({
       }}
       onRotateToken={() => {
         void rotateGuestToken({ campfireId: campfire._id }).then((result) => {
+          setGuestToken(slug, result.guestToken)
           const url = buildJoinUrl(slug, result.guestToken)
           setSettingsJoinUrl(url)
           setShareJoinUrl(url)

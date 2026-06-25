@@ -4,6 +4,7 @@ import { routerWithQueryClient } from '@tanstack/react-router-with-query'
 import { ConvexAuthProvider } from '@convex-dev/auth/react'
 import { ConvexQueryClient } from '@convex-dev/react-query'
 import { routeTree } from './routeTree.gen'
+import '~/lib/initGuestToken'
 
 export function getRouter() {
   const CONVEX_URL = (import.meta as any).env.VITE_CONVEX_URL!
@@ -26,6 +27,7 @@ export function getRouter() {
   const router = routerWithQueryClient(
     createRouter({
       routeTree,
+      trailingSlash: 'never',
       defaultPreload: 'intent',
       context: { queryClient },
       scrollRestoration: true,

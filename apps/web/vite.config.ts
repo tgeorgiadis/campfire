@@ -25,7 +25,11 @@ export default defineConfig({
     inconsistentCjsInterop: true,
   },
   plugins: [
-    tanstackStart(),
+    tanstackStart({
+      spa: {
+        enabled: true,
+      },
+    }),
     rnw(),
     tailwindcss(),
     uniwind({

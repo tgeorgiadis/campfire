@@ -2,10 +2,9 @@ import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useConvexAuth, useMutation } from 'convex/react'
 import { useEffect, useState } from 'react'
 import { api } from '@campfire/backend/convex/_generated/api'
-import { buildJoinUrl } from '@campfire/app-core'
+import { buildJoinUrl, setGuestToken } from '@campfire/app-core'
 import { CreateCampfireScreen, LoadingScreen } from '@campfire/ui'
 import { QrCanvas } from '~/lib/QrCanvas'
-import '~/lib/initGuestToken'
 
 export const Route = createFileRoute('/campfires/new')({
   ssr: false,
@@ -51,6 +50,7 @@ function CreateCampfire() {
         setError(null)
         void createCampfire({ name, visibility })
           .then((result) => {
+            setGuestToken(result.slug, result.guestToken)
             setCreated({ slug: result.slug, guestToken: result.guestToken })
           })
           .catch((err: unknown) => {

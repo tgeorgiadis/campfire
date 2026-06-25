@@ -4,7 +4,6 @@ import { useSuspenseQuery } from '@tanstack/react-query'
 import { convexQuery } from '@convex-dev/react-query'
 import { api } from '@campfire/backend/convex/_generated/api'
 import { HomeLoggedOutScreen, HomeScreen, LoadingScreen } from '@campfire/ui'
-import '~/lib/initGuestToken'
 
 export const Route = createFileRoute('/')({
   ssr: false,

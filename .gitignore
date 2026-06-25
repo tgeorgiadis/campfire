@@ -25,3 +25,4 @@ dist/
 /playwright/.cache/
 
 app.config.timestamp_*.js
+.env*

@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SignInRouteImport } from './routes/sign-in'
 import { Route as ProfileRouteImport } from './routes/profile'
+import { Route as SplatRouteImport } from './routes/$'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CampfiresNewRouteImport } from './routes/campfires/new'
 import { Route as CSlugIndexRouteImport } from './routes/c/$slug/index'
@@ -24,6 +25,11 @@ const SignInRoute = SignInRouteImport.update({
 const ProfileRoute = ProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SplatRoute = SplatRouteImport.update({
+  id: '/$',
+  path: '/$',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -49,6 +55,7 @@ const CSlugJoinRoute = CSlugJoinRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/$': typeof SplatRoute
   '/profile': typeof ProfileRoute
   '/sign-in': typeof SignInRoute
   '/campfires/new': typeof CampfiresNewRoute
@@ -57,6 +64,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/$': typeof SplatRoute
   '/profile': typeof ProfileRoute
   '/sign-in': typeof SignInRoute
   '/campfires/new': typeof CampfiresNewRoute
@@ -66,6 +74,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/$': typeof SplatRoute
   '/profile': typeof ProfileRoute
   '/sign-in': typeof SignInRoute
   '/campfires/new': typeof CampfiresNewRoute
@@ -76,6 +85,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/$'
     | '/profile'
     | '/sign-in'
     | '/campfires/new'
@@ -84,6 +94,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/$'
     | '/profile'
     | '/sign-in'
     | '/campfires/new'
@@ -92,6 +103,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/$'
     | '/profile'
     | '/sign-in'
     | '/campfires/new'
@@ -101,6 +113,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  SplatRoute: typeof SplatRoute
   ProfileRoute: typeof ProfileRoute
   SignInRoute: typeof SignInRoute
   CampfiresNewRoute: typeof CampfiresNewRoute
@@ -122,6 +135,13 @@ declare module '@tanstack/react-router' {
       path: '/profile'
       fullPath: '/profile'
       preLoaderRoute: typeof ProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/$': {
+      id: '/$'
+      path: '/$'
+      fullPath: '/$'
+      preLoaderRoute: typeof SplatRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -157,6 +177,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  SplatRoute: SplatRoute,
   ProfileRoute: ProfileRoute,
   SignInRoute: SignInRoute,
   CampfiresNewRoute: CampfiresNewRoute,

@@ -2,7 +2,6 @@ import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useEffect } from 'react'
 import { setGuestToken } from '@campfire/app-core'
 import { JoinScreen } from '@campfire/ui'
-import '~/lib/initGuestToken'
 
 export const Route = createFileRoute('/c/$slug/join')({
   ssr: false,
@@ -20,7 +19,12 @@ function JoinCampfire() {
   useEffect(() => {
     if (token) {
       setGuestToken(slug, token)
-      void navigate({ to: '/c/$slug', params: { slug }, replace: true })
+      void navigate({
+        to: '/c/$slug',
+        params: { slug },
+        replace: true,
+        state: { guestToken: token },
+      })
     }
   }, [slug, token, navigate])
 
