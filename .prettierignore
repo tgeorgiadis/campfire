@@ -1,0 +1,15 @@
+.nitro/
+.output/
+.prettierrc
+.tanstack/
+**/api
+**/build
+**/public
+**/public
+packages/backend/convex/_generated/
+example/convex/_generated/
+packages/backend/convex/README.md
+bun.lock
+apps/web/src/routeTree.gen.ts
+.agents/skills/
+.claude/skills/

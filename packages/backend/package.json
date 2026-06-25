@@ -1,0 +1,15 @@
+{
+  "name": "@campfire/backend",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "convex dev",
+    "codegen": "convex codegen"
+  },
+  "dependencies": {
+    "convex": "^1.36.1"
+  },
+  "exports": {
+    "./convex/_generated/api": "./convex/_generated/api.js"
+  }
+}
