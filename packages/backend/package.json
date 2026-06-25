@@ -12,6 +12,7 @@
     "convex": "^1.36.1"
   },
   "exports": {
-    "./convex/_generated/api": "./convex/_generated/api.js"
+    "./convex/_generated/api": "./convex/_generated/api.js",
+    "./convex/_generated/dataModel": "./convex/_generated/dataModel.d.ts"
   }
 }

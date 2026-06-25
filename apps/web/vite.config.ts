@@ -1,19 +1,39 @@
-import { tanstackStart } from '@tanstack/react-start/plugin/vite'
-import { defineConfig } from 'vite'
-import tsConfigPaths from 'vite-tsconfig-paths'
 import tailwindcss from '@tailwindcss/vite'
-import viteReact from '@vitejs/plugin-react'
+import { tanstackStart } from '@tanstack/react-start/plugin/vite'
+import { uniwind } from 'uniwind/vite'
+import { defineConfig } from 'vite'
+import { rnw } from 'vite-plugin-rnw'
+import tsConfigPaths from 'vite-tsconfig-paths'
 
 export default defineConfig({
   server: {
     port: 3000,
   },
+  optimizeDeps: {
+    include: [
+      'react-native-web',
+      '@react-native/normalize-colors',
+      'inline-style-prefixer',
+    ],
+  },
+  resolve: {
+    alias: {
+      'inline-style-prefixer/lib': 'inline-style-prefixer/es',
+    },
+  },
+  legacy: {
+    inconsistentCjsInterop: true,
+  },
   plugins: [
+    tanstackStart(),
+    rnw(),
     tailwindcss(),
+    uniwind({
+      cssEntryFile: '../../packages/ui/src/global.css',
+      dtsFile: './src/uniwind-types.d.ts',
+    }),
     tsConfigPaths({
       projects: ['./tsconfig.json'],
     }),
-    tanstackStart(),
-    viteReact(),
   ],
 })

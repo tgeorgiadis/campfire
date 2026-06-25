@@ -10,17 +10,20 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SignInRouteImport } from './routes/sign-in'
-import { Route as AnotherPageRouteImport } from './routes/anotherPage'
+import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CampfiresNewRouteImport } from './routes/campfires/new'
+import { Route as CSlugIndexRouteImport } from './routes/c/$slug/index'
+import { Route as CSlugJoinRouteImport } from './routes/c/$slug/join'
 
 const SignInRoute = SignInRouteImport.update({
   id: '/sign-in',
   path: '/sign-in',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AnotherPageRoute = AnotherPageRouteImport.update({
-  id: '/anotherPage',
-  path: '/anotherPage',
+const ProfileRoute = ProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -28,35 +31,81 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CampfiresNewRoute = CampfiresNewRouteImport.update({
+  id: '/campfires/new',
+  path: '/campfires/new',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CSlugIndexRoute = CSlugIndexRouteImport.update({
+  id: '/c/$slug/',
+  path: '/c/$slug/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CSlugJoinRoute = CSlugJoinRouteImport.update({
+  id: '/c/$slug/join',
+  path: '/c/$slug/join',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/anotherPage': typeof AnotherPageRoute
+  '/profile': typeof ProfileRoute
   '/sign-in': typeof SignInRoute
+  '/campfires/new': typeof CampfiresNewRoute
+  '/c/$slug/join': typeof CSlugJoinRoute
+  '/c/$slug/': typeof CSlugIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/anotherPage': typeof AnotherPageRoute
+  '/profile': typeof ProfileRoute
   '/sign-in': typeof SignInRoute
+  '/campfires/new': typeof CampfiresNewRoute
+  '/c/$slug/join': typeof CSlugJoinRoute
+  '/c/$slug': typeof CSlugIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/anotherPage': typeof AnotherPageRoute
+  '/profile': typeof ProfileRoute
   '/sign-in': typeof SignInRoute
+  '/campfires/new': typeof CampfiresNewRoute
+  '/c/$slug/join': typeof CSlugJoinRoute
+  '/c/$slug/': typeof CSlugIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/anotherPage' | '/sign-in'
+  fullPaths:
+    | '/'
+    | '/profile'
+    | '/sign-in'
+    | '/campfires/new'
+    | '/c/$slug/join'
+    | '/c/$slug/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/anotherPage' | '/sign-in'
-  id: '__root__' | '/' | '/anotherPage' | '/sign-in'
+  to:
+    | '/'
+    | '/profile'
+    | '/sign-in'
+    | '/campfires/new'
+    | '/c/$slug/join'
+    | '/c/$slug'
+  id:
+    | '__root__'
+    | '/'
+    | '/profile'
+    | '/sign-in'
+    | '/campfires/new'
+    | '/c/$slug/join'
+    | '/c/$slug/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AnotherPageRoute: typeof AnotherPageRoute
+  ProfileRoute: typeof ProfileRoute
   SignInRoute: typeof SignInRoute
+  CampfiresNewRoute: typeof CampfiresNewRoute
+  CSlugJoinRoute: typeof CSlugJoinRoute
+  CSlugIndexRoute: typeof CSlugIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -68,11 +117,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SignInRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/anotherPage': {
-      id: '/anotherPage'
-      path: '/anotherPage'
-      fullPath: '/anotherPage'
-      preLoaderRoute: typeof AnotherPageRouteImport
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -82,13 +131,37 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/campfires/new': {
+      id: '/campfires/new'
+      path: '/campfires/new'
+      fullPath: '/campfires/new'
+      preLoaderRoute: typeof CampfiresNewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/c/$slug/': {
+      id: '/c/$slug/'
+      path: '/c/$slug'
+      fullPath: '/c/$slug/'
+      preLoaderRoute: typeof CSlugIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/c/$slug/join': {
+      id: '/c/$slug/join'
+      path: '/c/$slug/join'
+      fullPath: '/c/$slug/join'
+      preLoaderRoute: typeof CSlugJoinRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AnotherPageRoute: AnotherPageRoute,
+  ProfileRoute: ProfileRoute,
   SignInRoute: SignInRoute,
+  CampfiresNewRoute: CampfiresNewRoute,
+  CSlugJoinRoute: CSlugJoinRoute,
+  CSlugIndexRoute: CSlugIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

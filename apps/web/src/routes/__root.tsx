@@ -1,3 +1,4 @@
+import appCss from '@campfire/ui/global.css?url'
 import {
   HeadContent,
   Outlet,
@@ -6,7 +7,6 @@ import {
 } from '@tanstack/react-router'
 import * as React from 'react'
 import type { QueryClient } from '@tanstack/react-query'
-import appCss from '~/styles/app.css?url'
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient
@@ -21,7 +21,7 @@ export const Route = createRootRouteWithContext<{
         content: 'width=device-width, initial-scale=1',
       },
       {
-        title: 'TanStack Start Starter',
+        title: 'Campfire',
       },
     ],
     links: [
@@ -61,11 +61,11 @@ function RootComponent() {
 
 function RootDocument({ children }: { children: React.ReactNode }) {
   return (
-    <html>
+    <html suppressHydrationWarning>
       <head>
         <HeadContent />
       </head>
-      <body>
+      <body className="font-sans bg-ig-page" suppressHydrationWarning>
         {children}
         <Scripts />
       </body>

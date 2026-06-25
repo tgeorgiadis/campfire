@@ -9,8 +9,11 @@
  */
 
 import type * as auth from "../auth.js";
+import type * as campfires from "../campfires.js";
+import type * as comments from "../comments.js";
 import type * as http from "../http.js";
-import type * as myFunctions from "../myFunctions.js";
+import type * as lib_access from "../lib/access.js";
+import type * as photos from "../photos.js";
 
 import type {
   ApiFromModules,
@@ -20,8 +23,11 @@ import type {
 
 declare const fullApi: ApiFromModules<{
   auth: typeof auth;
+  campfires: typeof campfires;
+  comments: typeof comments;
   http: typeof http;
-  myFunctions: typeof myFunctions;
+  "lib/access": typeof lib_access;
+  photos: typeof photos;
 }>;
 
 /**

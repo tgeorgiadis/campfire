@@ -1,11 +1,12 @@
 {
-  "include": ["**/*.ts", "**/*.tsx", "public/script*.js"],
+  "include": ["**/*.ts", "**/*.tsx", "src/uniwind-env.d.ts", "public/script*.js"],
   "compilerOptions": {
     "target": "ES2022",
     "jsx": "react-jsx",
     "module": "ESNext",
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "types": ["vite/client"],
+    "jsxImportSource": "react",
 
     /* Bundler mode */
     "moduleResolution": "bundler",
