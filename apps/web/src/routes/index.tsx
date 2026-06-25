@@ -1,5 +1,6 @@
 import { Link, createFileRoute } from '@tanstack/react-router'
-import { useMutation } from 'convex/react'
+import { useAuthActions } from '@convex-dev/auth/react'
+import { useConvexAuth, useMutation } from 'convex/react'
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { convexQuery } from '@convex-dev/react-query'
 import { api } from '@campfire/backend/convex/_generated/api'
@@ -9,6 +10,8 @@ export const Route = createFileRoute('/')({
 })
 
 function Home() {
+  const { isAuthenticated, isLoading } = useConvexAuth()
+  const { signOut } = useAuthActions()
   const {
     data: { viewer, numbers },
   } = useSuspenseQuery(convexQuery(api.myFunctions.listNumbers, { count: 10 }))
@@ -21,7 +24,25 @@ function Home() {
         Convex + Tanstack Start
       </h1>
       <div className="flex flex-col gap-8 max-w-lg mx-auto">
-        <p>Welcome {viewer ?? 'Anonymous'}!</p>
+        <div className="flex items-center justify-between gap-4">
+          <p>Welcome {viewer ?? 'Anonymous'}!</p>
+          {!isLoading && isAuthenticated ? (
+            <button
+              type="button"
+              className="text-sm text-blue-600 underline hover:no-underline"
+              onClick={() => void signOut()}
+            >
+              Sign out
+            </button>
+          ) : !isLoading ? (
+            <Link
+              to="/sign-in"
+              className="text-sm text-blue-600 underline hover:no-underline"
+            >
+              Sign in
+            </Link>
+          ) : null}
+        </div>
         <p>
           Click the button below and open this page in another window - this
           data is persisted in the Convex cloud database!

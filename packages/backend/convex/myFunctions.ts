@@ -1,4 +1,4 @@
-import { v } from 'convex/values'
+import { ConvexError, v } from 'convex/values'
 import { action, mutation, query } from './_generated/server'
 import { api } from './_generated/api'
 
@@ -37,9 +37,10 @@ export const addNumber = mutation({
 
   // Mutation implementation.
   handler: async (ctx, args) => {
-    // Insert or modify documents in the database here.
-    // Mutations can also read from the database like queries.
-    // See https://docs.convex.dev/database/writing-data.
+    const identity = await ctx.auth.getUserIdentity()
+    if (!identity) {
+      throw new ConvexError('Not authenticated')
+    }
 
     const id = await ctx.db.insert('numbers', { value: args.value })
 

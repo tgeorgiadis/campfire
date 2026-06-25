@@ -7,6 +7,8 @@
     "codegen": "convex codegen"
   },
   "dependencies": {
+    "@auth/core": "0.41.1",
+    "@convex-dev/auth": "^0.0.90",
     "convex": "^1.36.1"
   },
   "exports": {
