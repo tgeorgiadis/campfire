@@ -31,8 +31,24 @@ export function setGuestToken(slug: string, token: string): void {
   store.setItem(`${STORAGE_PREFIX}${slug}`, token)
 }
 
+function getOrigin(): string {
+  return typeof window !== 'undefined'
+    ? window.location.origin
+    : 'http://localhost:3000'
+}
+
 export function buildJoinUrl(slug: string, guestToken: string): string {
-  const origin =
-    typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000'
-  return `${origin}/c/${slug}/join?token=${encodeURIComponent(guestToken)}`
+  return `${getOrigin()}/c/${slug}/join?token=${encodeURIComponent(guestToken)}`
+}
+
+export function buildAlbumUrl(slug: string): string {
+  return `${getOrigin()}/c/${slug}/album`
+}
+
+export function buildWallUrl(slug: string): string {
+  return `${getOrigin()}/c/${slug}/wall`
+}
+
+export function buildEventHomeUrl(slug: string): string {
+  return `${getOrigin()}/c/${slug}/home`
 }

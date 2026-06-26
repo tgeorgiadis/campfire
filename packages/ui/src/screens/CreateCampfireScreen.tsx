@@ -1,5 +1,6 @@
 import { Pressable, Text, View } from 'react-native'
 import { AppShell } from '../components/AppShell'
+import { CampfireLogo } from '../components/CampfireLogo'
 import { PrimaryButton, TextButton } from '../components/PrimaryButton'
 import { TextField } from '../components/TextField'
 
@@ -35,7 +36,8 @@ export function CreateCampfireScreen({
   if (created) {
     return (
       <AppShell activeTab="create" onHome={onHome} onCreate={onCreate} onProfile={onProfile}>
-        <View className="px-4 py-8 gap-6 max-w-[350px] mx-auto w-full items-center">
+        <View className="px-4 py-8 gap-6 max-w-[350px] w-full items-center">
+          <CampfireLogo size="md" />
           <Text className="text-2xl font-semibold text-ig-text text-center">
             Campfire created
           </Text>
@@ -54,7 +56,7 @@ export function CreateCampfireScreen({
 
   return (
     <AppShell activeTab="create" onHome={onHome} onCreate={onCreate} onProfile={onProfile}>
-      <View className="px-4 py-8 gap-6 max-w-[350px] mx-auto w-full">
+      <View className="px-4 py-8 gap-6 max-w-[350px] w-full">
         <Text className="text-2xl font-semibold text-ig-text">Create campfire</Text>
         <TextField
           label="Name"

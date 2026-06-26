@@ -20,7 +20,7 @@ function JoinCampfire() {
     if (token) {
       setGuestToken(slug, token)
       void navigate({
-        to: '/c/$slug',
+        to: '/c/$slug/album',
         params: { slug },
         replace: true,
         state: { guestToken: token },

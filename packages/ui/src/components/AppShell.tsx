@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import { Pressable, ScrollView, Text, View } from 'react-native'
 import { SidebarNavItem } from './CampfireAvatar'
+import { CampfireLogo } from './CampfireLogo'
 
 export type AppShellTab = 'home' | 'create' | 'profile'
 
@@ -24,9 +25,9 @@ export function AppShell({
       <View className="flex-1 flex-row w-full">
         {showNav ? (
           <View className="hidden md:flex w-[244px] shrink-0 border-r border-ig-border bg-ig-surface px-3 py-6 fixed left-0 top-0 bottom-0 z-10">
-            <Text className="text-2xl font-bold text-ig-text px-3 mb-8 tracking-tight">
-              Campfire
-            </Text>
+            <View className="px-3 mb-8">
+              <CampfireLogo size="sm" />
+            </View>
             <View className="gap-1">
               <SidebarNavItem
                 icon="⌂"
@@ -52,7 +53,7 @@ export function AppShell({
 
         <View className={`flex-1 w-full ${showNav ? 'md:ml-[244px]' : ''} pb-16 md:pb-0`}>
           <ScrollView className="flex-1" contentContainerClassName="grow">
-            <View className="max-w-[1200px] mx-auto w-full">{children}</View>
+            <View className="max-w-[1200px] w-full">{children}</View>
           </ScrollView>
         </View>
       </View>

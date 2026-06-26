@@ -26,6 +26,9 @@ export function PhotoLightbox({
   commentSubmitting,
   commentError,
   onSubmitComment,
+  likeCount,
+  onLike,
+  disableDownload,
 }: {
   photo: PhotoItem | null
   onClose: () => void
@@ -39,6 +42,9 @@ export function PhotoLightbox({
   commentSubmitting: boolean
   commentError: string | null
   onSubmitComment: () => void
+  likeCount?: number
+  onLike?: () => void
+  disableDownload?: boolean
 }) {
   return (
     <Modal
@@ -69,6 +75,27 @@ export function PhotoLightbox({
                 {photo.caption ? (
                   <Text className="text-white text-sm text-center">{photo.caption}</Text>
                 ) : null}
+                <View className="flex-row items-center justify-center gap-4">
+                  {likeCount !== undefined && likeCount > 0 ? (
+                    <Text className="text-white/80 text-sm">{likeCount} likes</Text>
+                  ) : null}
+                  {onLike ? (
+                    <Pressable onPress={onLike}>
+                      <Text className="text-cf-accent text-sm font-semibold">Like</Text>
+                    </Pressable>
+                  ) : null}
+                  {!disableDownload && photo.url ? (
+                    <Pressable
+                      onPress={() => {
+                        if (photo.url) {
+                          window.open(photo.url, '_blank')
+                        }
+                      }}
+                    >
+                      <Text className="text-white text-sm underline">Download</Text>
+                    </Pressable>
+                  ) : null}
+                </View>
                 {photo.uploaderGuestName ? (
                   <Text className="text-white/70 text-xs text-center">
                     by {photo.uploaderGuestName}

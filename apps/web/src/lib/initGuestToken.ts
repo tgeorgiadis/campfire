@@ -1,6 +1,9 @@
-import { setGuestTokenStorage } from '@campfire/app-core'
+import { setGuestTokenStorage, setLastCampfireStorage } from '@campfire/app-core'
 
-setGuestTokenStorage({
-  getItem: (key) => localStorage.getItem(key),
-  setItem: (key, value) => localStorage.setItem(key, value),
-})
+const storage = {
+  getItem: (key: string) => localStorage.getItem(key),
+  setItem: (key: string, value: string) => localStorage.setItem(key, value),
+}
+
+setGuestTokenStorage(storage)
+setLastCampfireStorage(storage)

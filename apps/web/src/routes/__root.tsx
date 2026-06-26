@@ -23,6 +23,10 @@ export const Route = createRootRouteWithContext<{
       {
         title: 'Campfire',
       },
+      {
+        name: 'theme-color',
+        content: '#FF5E3A',
+      },
     ],
     links: [
       { rel: 'stylesheet', href: appCss },
@@ -43,7 +47,7 @@ export const Route = createRootRouteWithContext<{
         sizes: '16x16',
         href: '/favicon-16x16.png',
       },
-      { rel: 'manifest', href: '/site.webmanifest', color: '#fffff' },
+      { rel: 'manifest', href: '/site.webmanifest', color: '#FF5E3A' },
       { rel: 'icon', href: '/favicon.ico' },
     ],
   }),

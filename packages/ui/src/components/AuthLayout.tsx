@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import { Text, View } from 'react-native'
 import { PrimaryButton } from './PrimaryButton'
+import { CampfireLogo } from './CampfireLogo'
 
 export function AuthLayout({
   title,
@@ -23,7 +24,7 @@ export function AuthLayout({
       <View className="flex-1 items-center justify-center p-8">
         <View className="w-full max-w-[350px] gap-6">
           <View className="items-center gap-2 mb-2">
-            <Text className="text-4xl font-bold text-ig-text tracking-tight">Campfire</Text>
+            <CampfireLogo size="lg" />
             {subtitle ? (
               <Text className="text-sm text-ig-muted text-center">{subtitle}</Text>
             ) : null}
@@ -46,7 +47,7 @@ function DefaultPromo() {
         {Array.from({ length: 9 }).map((_, index) => (
           <View
             key={index}
-            className="w-[84px] h-[84px] bg-gradient-to-br from-orange-300 to-pink-400 rounded-sm opacity-80"
+            className="w-[84px] h-[84px] bg-gradient-to-br from-cf-flame-yellow via-cf-flame-orange to-cf-flame-red rounded-sm opacity-80"
           />
         ))}
       </View>

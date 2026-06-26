@@ -13,6 +13,9 @@ import type * as campfires from "../campfires.js";
 import type * as comments from "../comments.js";
 import type * as http from "../http.js";
 import type * as lib_access from "../lib/access.js";
+import type * as lib_defaults from "../lib/defaults.js";
+import type * as lib_validators from "../lib/validators.js";
+import type * as migrations from "../migrations.js";
 import type * as photos from "../photos.js";
 
 import type {
@@ -27,6 +30,9 @@ declare const fullApi: ApiFromModules<{
   comments: typeof comments;
   http: typeof http;
   "lib/access": typeof lib_access;
+  "lib/defaults": typeof lib_defaults;
+  "lib/validators": typeof lib_validators;
+  migrations: typeof migrations;
   photos: typeof photos;
 }>;
 

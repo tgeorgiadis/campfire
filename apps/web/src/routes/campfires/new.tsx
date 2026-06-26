@@ -1,25 +1,24 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
-import { useConvexAuth, useMutation } from 'convex/react'
-import { useEffect, useState } from 'react'
+import { useConvexAuth, useQuery } from 'convex/react'
+import { useEffect } from 'react'
 import { api } from '@campfire/backend/convex/_generated/api'
-import { buildJoinUrl, setGuestToken } from '@campfire/app-core'
-import { CreateCampfireScreen, LoadingScreen } from '@campfire/ui'
-import { QrCanvas } from '~/lib/QrCanvas'
+import {
+  getLastCampfireSlug,
+  resolveDefaultCampfireSlug,
+} from '@campfire/app-core'
+import { LoadingScreen } from '@campfire/ui'
 
 export const Route = createFileRoute('/campfires/new')({
   ssr: false,
-  component: CreateCampfire,
+  component: CreateCampfireRedirect,
 })
 
-function CreateCampfire() {
+function CreateCampfireRedirect() {
   const { isAuthenticated, isLoading } = useConvexAuth()
   const navigate = useNavigate()
-  const createCampfire = useMutation(api.campfires.create)
-  const [name, setName] = useState('')
-  const [visibility, setVisibility] = useState<'public' | 'private'>('private')
-  const [error, setError] = useState<string | null>(null)
-  const [created, setCreated] = useState<{ slug: string; guestToken: string } | null>(
-    null,
+  const campfires = useQuery(
+    api.campfires.listMine,
+    isAuthenticated ? {} : 'skip',
   )
 
   useEffect(() => {
@@ -28,43 +27,26 @@ function CreateCampfire() {
     }
   }, [isAuthenticated, isLoading, navigate])
 
-  if (isLoading || !isAuthenticated) {
-    return <LoadingScreen />
-  }
+  useEffect(() => {
+    if (isLoading || !isAuthenticated || campfires === undefined) {
+      return
+    }
 
-  const joinUrl = created
-    ? buildJoinUrl(created.slug, created.guestToken)
-    : ''
+    const slug =
+      resolveDefaultCampfireSlug(campfires) ?? getLastCampfireSlug() ?? null
 
-  return (
-    <CreateCampfireScreen
-      name={name}
-      onNameChange={setName}
-      visibility={visibility}
-      onVisibilityChange={setVisibility}
-      error={error}
-      created={created !== null}
-      joinUrl={joinUrl}
-      qrElement={created ? <QrCanvas url={joinUrl} size={240} /> : undefined}
-      onSubmit={() => {
-        setError(null)
-        void createCampfire({ name, visibility })
-          .then((result) => {
-            setGuestToken(result.slug, result.guestToken)
-            setCreated({ slug: result.slug, guestToken: result.guestToken })
-          })
-          .catch((err: unknown) => {
-            setError(err instanceof Error ? err.message : 'Failed to create')
-          })
-      }}
-      onHome={() => void navigate({ to: '/' })}
-      onCreate={() => void navigate({ to: '/campfires/new' })}
-      onProfile={() => void navigate({ to: '/profile' })}
-      onOpenBoard={() => {
-        if (created) {
-          void navigate({ to: '/c/$slug', params: { slug: created.slug } })
-        }
-      }}
-    />
-  )
+    if (slug) {
+      void navigate({
+        to: '/c/$slug/events',
+        params: { slug },
+        search: { create: true },
+        replace: true,
+      })
+      return
+    }
+
+    void navigate({ to: '/', replace: true })
+  }, [campfires, isAuthenticated, isLoading, navigate])
+
+  return <LoadingScreen message="Opening create event…" />
 }

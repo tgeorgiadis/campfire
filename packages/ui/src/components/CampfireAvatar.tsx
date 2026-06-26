@@ -17,7 +17,7 @@ export function CampfireAvatar({
 
   return (
     <View
-      className={`${sizeClass} rounded-full border border-ig-border bg-gradient-to-br from-orange-400 to-pink-500 items-center justify-center`}
+      className={`${sizeClass} rounded-full border border-ig-border bg-gradient-to-br from-cf-flame-yellow via-cf-flame-orange to-cf-flame-red items-center justify-center`}
     >
       <Text className={`${textClass} font-semibold text-white`}>{initials || '?'}</Text>
     </View>
@@ -47,20 +47,30 @@ export function SidebarNavItem({
   label,
   active,
   onPress,
+  accent,
 }: {
   icon: string
   label: string
   active?: boolean
   onPress: () => void
+  accent?: boolean
 }) {
   return (
     <Pressable
       onPress={onPress}
-      className={`flex-row items-center gap-4 py-3 px-3 rounded-lg ${active ? 'font-bold' : ''}`}
+      className={`flex-row items-center gap-3 py-2.5 px-3 rounded-lg ${
+        active && accent ? 'bg-cf-accent-light' : ''
+      }`}
     >
-      <Text className="text-2xl">{icon}</Text>
+      <Text className="text-lg">{icon}</Text>
       <Text
-        className={`text-base ${active ? 'font-bold text-ig-text' : 'text-ig-text'}`}
+        className={`text-sm ${
+          active && accent
+            ? 'font-semibold text-cf-accent'
+            : active
+              ? 'font-bold text-ig-text'
+              : 'text-ig-text'
+        }`}
       >
         {label}
       </Text>
