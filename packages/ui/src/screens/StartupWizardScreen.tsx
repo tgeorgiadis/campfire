@@ -29,12 +29,12 @@ export function StartupWizardScreen({
             Create your first campfire
           </Text>
           <Text className="text-sm text-ig-muted text-center">
-            Name your event to get a shareable album and photo wall for guests.
+            Name your gathering — we&apos;ll give you a link and QR so everyone can add photos.
           </Text>
         </View>
 
         <TextField
-          label="Event name"
+          label="Campfire name"
           value={name}
           onChangeText={onNameChange}
           placeholder="Summer BBQ 2026"

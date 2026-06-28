@@ -5,7 +5,7 @@ import { api } from '@campfire/backend/convex/_generated/api'
 import {
   AccessDeniedScreen,
   DigitalAlbumScreen,
-  LoadingScreen,
+  DigitalAlbumSkeleton,
 } from '@campfire/ui'
 import {
   getGuestToken,
@@ -21,8 +21,13 @@ import {
   markWelcomeSeen,
 } from '~/lib/eventWebUtils'
 
+import { publicSettingsQuery } from '~/lib/eventQueries'
+
 export const Route = createFileRoute('/c/$slug/album')({
   ssr: false,
+  loader: async ({ context, params }) => {
+    await context.queryClient.ensureQueryData(publicSettingsQuery(params.slug))
+  },
   component: DigitalAlbum,
 })
 
@@ -47,7 +52,7 @@ function DigitalAlbum() {
   })
 
   if (publicSettings === undefined) {
-    return <LoadingScreen />
+    return <DigitalAlbumSkeleton />
   }
 
   if (publicSettings === null) {

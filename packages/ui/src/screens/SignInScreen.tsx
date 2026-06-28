@@ -25,7 +25,7 @@ export function SignInScreen({
   return (
     <AuthLayout
       title={step === 'signIn' ? 'Sign in' : 'Sign up'}
-      subtitle="Share photos from your events"
+      subtitle="The album you build together."
     >
       <View className="gap-3">
         <TextField
@@ -77,7 +77,7 @@ export function JoinScreen({
           This link is missing a guest token. Ask the campfire owner for a new QR code.
         </Text>
         {onTryBoard ? (
-          <TextButton label="Try opening the board anyway" onPress={onTryBoard} />
+          <TextButton label="Try opening the album anyway" onPress={onTryBoard} />
         ) : null}
       </View>
     )

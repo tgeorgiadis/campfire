@@ -9,7 +9,12 @@ import {
   setGuestToken,
   setLastCampfireSlug,
 } from '@campfire/app-core'
-import { HomeLoggedOutScreen, LoadingScreen, StartupWizardScreen } from '@campfire/ui'
+import {
+  EventShellSkeleton,
+  HomeLoggedOutScreen,
+  SignInSkeleton,
+  StartupWizardScreen,
+} from '@campfire/ui'
 
 export const Route = createFileRoute('/')({
   ssr: false,
@@ -21,7 +26,7 @@ function Dashboard() {
   const navigate = useNavigate()
 
   if (isLoading) {
-    return <LoadingScreen />
+    return <SignInSkeleton />
   }
 
   if (!isAuthenticated) {
@@ -57,7 +62,7 @@ function AuthenticatedDashboard() {
   }, [defaultSlug, navigate])
 
   if (defaultSlug) {
-    return <LoadingScreen message="Opening your campfire…" />
+    return <EventShellSkeleton />
   }
 
   return (
@@ -70,7 +75,7 @@ function AuthenticatedDashboard() {
       submitting={submitting}
       onSubmit={() => {
         if (!name.trim()) {
-          setError('Enter an event name')
+          setError('Give your campfire a name')
           return
         }
         setError(null)

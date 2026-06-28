@@ -4,19 +4,30 @@ export function WebEventSelect({
   slug,
   campfires,
   onSwitchEvent,
+  onPrefetchSlug,
 }: {
   slug: string
   campfires: Array<CampfireSummary>
   onSwitchEvent: (slug: string) => void
+  onPrefetchSlug?: (slug: string) => void
 }) {
   return (
     <select
       className="w-full bg-transparent text-sm text-ig-text outline-none border-0"
       value={slug}
+      onFocus={() => {
+        for (const c of campfires) {
+          onPrefetchSlug?.(c.slug)
+        }
+      }}
       onChange={(e) => onSwitchEvent(e.target.value)}
     >
       {campfires.map((c) => (
-        <option key={c._id} value={c.slug}>
+        <option
+          key={c._id}
+          value={c.slug}
+          onMouseEnter={() => onPrefetchSlug?.(c.slug)}
+        >
           {c.name}
         </option>
       ))}

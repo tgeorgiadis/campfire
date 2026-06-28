@@ -2,7 +2,7 @@ import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useAuthActions } from '@convex-dev/auth/react'
 import { useConvexAuth } from 'convex/react'
 import { useEffect, useState } from 'react'
-import { LoadingScreen, SignInScreen } from '@campfire/ui'
+import { SignInScreen, SignInSkeleton } from '@campfire/ui'
 
 export const Route = createFileRoute('/sign-in')({
   ssr: false,
@@ -26,7 +26,7 @@ function SignIn() {
   }, [isAuthenticated, isLoading, navigate])
 
   if (isLoading || submitting || isAuthenticated) {
-    return <LoadingScreen />
+    return <SignInSkeleton />
   }
 
   return (

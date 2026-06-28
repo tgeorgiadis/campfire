@@ -52,12 +52,16 @@ function DefaultPromo() {
         ))}
       </View>
       <Text className="text-2xl font-light text-ig-text max-w-xs text-center">
-        Share event photos with everyone around the campfire.
+        Gather. Share. Relive.
+      </Text>
+      <Text className="text-sm text-ig-muted max-w-xs text-center">
+        The album you build together.
       </Text>
     </View>
   )
 }
 
+// Prefer structured skeleton components for route loading states.
 export function LoadingScreen({ message = 'Loading…' }: { message?: string }) {
   return (
     <View className="flex-1 items-center justify-center p-8 min-h-[200px]">

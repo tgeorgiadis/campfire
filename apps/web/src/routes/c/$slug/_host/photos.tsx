@@ -2,34 +2,18 @@ import { createFileRoute } from '@tanstack/react-router'
 import { useMutation, usePaginatedQuery, useQuery } from 'convex/react'
 import { useRef, useState } from 'react'
 import { api } from '@campfire/backend/convex/_generated/api'
-import { EventPhotosScreen } from '@campfire/ui'
+import { EventPhotosContent } from '@campfire/ui'
 import { uploadPhoto } from '@campfire/app-core'
 import type { PhotoStatus } from '@campfire/app-core'
-import type { EventManagerContext } from '~/lib/eventContext'
-import { EventManagerGate } from '~/lib/useEventManager'
+import { useEventManagerContext } from '~/lib/EventManagerLayout'
 
-export const Route = createFileRoute('/c/$slug/photos')({
+export const Route = createFileRoute('/c/$slug/_host/photos')({
   ssr: false,
   component: EventPhotos,
 })
 
 function EventPhotos() {
-  const { slug } = Route.useParams()
-
-  return (
-    <EventManagerGate slug={slug}>
-      {(ctx) => <EventPhotosContent slug={slug} ctx={ctx} />}
-    </EventManagerGate>
-  )
-}
-
-function EventPhotosContent({
-  slug,
-  ctx,
-}: {
-  slug: string
-  ctx: EventManagerContext
-}) {
+  const { dashboard } = useEventManagerContext()
   const [photoTab, setPhotoTab] = useState<PhotoStatus>('published')
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [uploadError, setUploadError] = useState<string | null>(null)
@@ -43,13 +27,13 @@ function EventPhotosContent({
   const removePhoto = useMutation(api.photos.remove)
 
   const downloads = useQuery(api.photos.listDownloadUrls, {
-    campfireId: ctx.dashboard._id,
+    campfireId: dashboard._id,
   })
 
   const { results } = usePaginatedQuery(
     api.photos.listByCampfire,
     {
-      campfireId: ctx.dashboard._id,
+      campfireId: dashboard._id,
       status: photoTab,
     },
     { initialNumItems: 48 },
@@ -65,7 +49,7 @@ function EventPhotosContent({
     try {
       await uploadPhoto({
         file: { blob: selectedFile, mimeType: selectedFile.type },
-        campfireId: ctx.dashboard._id,
+        campfireId: dashboard._id,
         generateUploadUrl,
         createPhoto,
       })
@@ -90,20 +74,11 @@ function EventPhotosContent({
           e.target.value = ''
         }}
       />
-      <EventPhotosScreen
-        slug={slug}
-        campfires={ctx.campfires}
-        dashboard={ctx.dashboard}
+      <EventPhotosContent
+        dashboard={dashboard}
         photos={results}
         photoTab={photoTab}
         onPhotoTabChange={setPhotoTab}
-        activeTab="photos"
-        onNavigate={ctx.nav.onNavigate}
-        onSwitchEvent={ctx.nav.onSwitchEvent}
-        onSignOut={ctx.nav.onSignOut}
-        onCreateCampfire={ctx.nav.onCreateCampfire}
-        onViewAllEvents={ctx.nav.onViewAllEvents}
-        eventSwitcher={ctx.eventSwitcher}
         uploading={uploading}
         uploadError={uploadError}
         fileInput={null}
@@ -133,7 +108,7 @@ function EventPhotosContent({
         }}
         onCreateTextPost={(body, background) => {
           void createTextPost({
-            campfireId: ctx.dashboard._id,
+            campfireId: dashboard._id,
             textBody: body,
             textBackground: background,
           })

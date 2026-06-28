@@ -1,33 +1,25 @@
 import { useAuthActions } from '@convex-dev/auth/react'
 import { useNavigate } from '@tanstack/react-router'
-import { useConvexAuth, useQuery } from 'convex/react'
-import { useEffect } from 'react'
-import { api } from '@campfire/backend/convex/_generated/api'
+import { keepPreviousData, useQuery } from '@tanstack/react-query'
+import { useConvexAuth } from 'convex/react'
+import { useEffect, useMemo } from 'react'
 import { setLastCampfireSlug } from '@campfire/app-core'
-import { LoadingScreen } from '@campfire/ui'
-import { WebEventSelect } from './eventWebUtils'
+import { dashboardQuery, listMineQuery, membersQuery } from './eventQueries'
+import type { Id } from '@campfire/backend/convex/_generated/dataModel'
 import type { EventNavTab } from '@campfire/ui'
-import type { EventManagerContext } from './eventContext'
-import type { ReactNode } from 'react'
+import type { QueryClient } from '@tanstack/react-query'
+import type { RegisteredRouter } from '@tanstack/react-router'
 
-export function useEventManager(slug: string) {
-  const { isAuthenticated, isLoading } = useConvexAuth()
+export function useEventManager(slug: string, userEmail?: string | null) {
+  const { isAuthenticated, isLoading: authLoading } = useConvexAuth()
   const { signOut } = useAuthActions()
   const navigate = useNavigate()
-  const campfires = useQuery(
-    api.campfires.listMine,
-    isAuthenticated ? {} : 'skip',
-  )
-  const dashboard = useQuery(
-    api.campfires.getDashboard,
-    isAuthenticated ? { slug } : 'skip',
-  )
 
   useEffect(() => {
-    if (!isLoading && !isAuthenticated) {
+    if (!authLoading && !isAuthenticated) {
       void navigate({ to: '/sign-in' })
     }
-  }, [isAuthenticated, isLoading, navigate])
+  }, [isAuthenticated, authLoading, navigate])
 
   useEffect(() => {
     if (slug) {
@@ -35,95 +27,110 @@ export function useEventManager(slug: string) {
     }
   }, [slug])
 
-  const eventSwitcher =
-    campfires && campfires.length > 0 ? (
-      <WebEventSelect
-        slug={slug}
-        campfires={campfires}
-        onSwitchEvent={(nextSlug) => {
-          void navigate({ to: '/c/$slug/home', params: { slug: nextSlug } })
-        }}
-      />
-    ) : undefined
+  const campfiresQuery = useQuery({
+    ...listMineQuery(),
+    enabled: isAuthenticated,
+  })
 
-  const nav = {
-    onNavigate: (tab: EventNavTab) => {
-      if (tab === 'events') {
+  const dashboardQueryResult = useQuery({
+    ...dashboardQuery(slug),
+    enabled: isAuthenticated,
+    placeholderData: keepPreviousData,
+  })
+
+  const nav = useMemo(
+    () => ({
+      onNavigate: (tab: EventNavTab) => {
+        if (tab === 'events') {
+          void navigate({
+            to: '/c/$slug/events',
+            params: { slug },
+            search: { create: false },
+          })
+          return
+        }
+        const path =
+          tab === 'home'
+            ? '/c/$slug/home'
+            : tab === 'photos'
+              ? '/c/$slug/photos'
+              : '/c/$slug/settings'
+        void navigate({ to: path, params: { slug } })
+      },
+      onSwitchEvent: (nextSlug: string) => {
+        setLastCampfireSlug(nextSlug)
+        void navigate({ to: '/c/$slug/home', params: { slug: nextSlug } })
+      },
+      onSignOut: () => void signOut(),
+      onViewAllEvents: () => {
         void navigate({
           to: '/c/$slug/events',
           params: { slug },
           search: { create: false },
         })
-        return
-      }
-      const path =
-        tab === 'home'
-          ? '/c/$slug/home'
-          : tab === 'photos'
-            ? '/c/$slug/photos'
-            : '/c/$slug/settings'
-      void navigate({ to: path, params: { slug } })
-    },
-    onSwitchEvent: (nextSlug: string) => {
-      setLastCampfireSlug(nextSlug)
-      void navigate({ to: '/c/$slug/home', params: { slug: nextSlug } })
-    },
-    onSignOut: () => void signOut(),
-    onViewAllEvents: () => {
-      void navigate({
-        to: '/c/$slug/events',
-        params: { slug },
-        search: { create: false },
-      })
-    },
-    onCreateCampfire: () => {
-      void navigate({
-        to: '/c/$slug/events',
-        params: { slug },
-        search: { create: true },
-      })
-    },
-  }
+      },
+      onCreateCampfire: () => {
+        void navigate({
+          to: '/c/$slug/events',
+          params: { slug },
+          search: { create: true },
+        })
+      },
+    }),
+    [navigate, signOut, slug],
+  )
 
-  if (isLoading || !isAuthenticated) {
-    return { loading: true as const, eventSwitcher: undefined, nav }
-  }
+  const loading =
+    authLoading ||
+    !isAuthenticated ||
+    campfiresQuery.isLoading ||
+    dashboardQueryResult.isLoading
 
-  if (campfires === undefined || dashboard === undefined) {
-    return { loading: true as const, eventSwitcher, nav }
-  }
+  const dashboardLoading = dashboardQueryResult.isFetching && !dashboardQueryResult.data
 
   return {
-    loading: false as const,
-    campfires,
-    dashboard,
-    eventSwitcher,
+    loading,
+    dashboardLoading,
+    campfires: campfiresQuery.data,
+    dashboard: dashboardQueryResult.data ?? null,
     nav,
+    userEmail,
   }
 }
 
-export function EventManagerGate({
-  slug,
-  children,
-}: {
-  slug: string
-  children: (ctx: EventManagerContext) => ReactNode
-}) {
-  const ctx = useEventManager(slug)
-  if (ctx.loading) {
-    return <LoadingScreen />
+export function prefetchEventTab(
+  queryClient: QueryClient,
+  router: RegisteredRouter,
+  slug: string,
+  tab: EventNavTab,
+  campfireId?: Id<'campfires'>,
+) {
+  void queryClient.prefetchQuery(listMineQuery())
+  void queryClient.prefetchQuery(dashboardQuery(slug))
+
+  const route =
+    tab === 'home'
+      ? '/c/$slug/home'
+      : tab === 'photos'
+        ? '/c/$slug/photos'
+        : tab === 'settings'
+          ? '/c/$slug/settings'
+          : '/c/$slug/events'
+
+  void router.preloadRoute({
+    to: route,
+    params: { slug },
+    search: tab === 'events' ? { create: false } : undefined,
+  })
+
+  if (tab === 'settings' && campfireId) {
+    void queryClient.prefetchQuery(membersQuery(campfireId))
   }
-  if (!ctx.dashboard) {
-    return <LoadingScreen message="Event not found or access denied" />
-  }
-  return (
-    <>
-      {children({
-        campfires: ctx.campfires,
-        dashboard: ctx.dashboard,
-        eventSwitcher: ctx.eventSwitcher,
-        nav: ctx.nav,
-      })}
-    </>
-  )
+}
+
+export function prefetchCampfireDashboard(
+  queryClient: QueryClient,
+  slug: string,
+) {
+  void queryClient.prefetchQuery(dashboardQuery(slug))
 }

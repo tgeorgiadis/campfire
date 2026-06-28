@@ -96,7 +96,7 @@ export function DigitalAlbumScreen({
               <TextButton label="Sign in" onPress={onSignIn} />
             ) : null}
             {campfire.canUpload ? (
-              <PrimaryButton label="Add photos" onPress={() => setUploadOpen(true)} />
+              <PrimaryButton label="Add your photos" onPress={() => setUploadOpen(true)} />
             ) : null}
           </View>
         </View>
@@ -119,7 +119,7 @@ export function DigitalAlbumScreen({
               You can upload photos but not view the album.
             </Text>
             {campfire.canUpload ? (
-              <PrimaryButton label="Upload photos" onPress={() => setUploadOpen(true)} />
+              <PrimaryButton label="Add your photos" onPress={() => setUploadOpen(true)} />
             ) : null}
           </View>
         )}

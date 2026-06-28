@@ -27,7 +27,7 @@ export function TextField({
           value={value}
           onChangeText={onChangeText}
           placeholder={placeholder}
-          placeholderTextColor="#8e8e8e"
+          placeholderTextColor="#49505A"
           secureTextEntry={secureTextEntry}
           autoCapitalize={autoCapitalize}
           editable={editable}

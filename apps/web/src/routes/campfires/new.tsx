@@ -6,7 +6,7 @@ import {
   getLastCampfireSlug,
   resolveDefaultCampfireSlug,
 } from '@campfire/app-core'
-import { LoadingScreen } from '@campfire/ui'
+import { EventListContentSkeleton, EventShellSkeleton } from '@campfire/ui'
 
 export const Route = createFileRoute('/campfires/new')({
   ssr: false,
@@ -48,5 +48,7 @@ function CreateCampfireRedirect() {
     void navigate({ to: '/', replace: true })
   }, [campfires, isAuthenticated, isLoading, navigate])
 
-  return <LoadingScreen message="Opening create event…" />
+  return (
+    <EventShellSkeleton contentSkeleton={<EventListContentSkeleton />} />
+  )
 }

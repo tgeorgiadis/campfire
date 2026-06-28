@@ -13,7 +13,9 @@ export function PhotoGrid({
       <View className="py-16 items-center px-4">
         <Text className="text-3xl mb-2">📷</Text>
         <Text className="text-xl font-light text-ig-text">No photos yet</Text>
-        <Text className="text-sm text-ig-muted mt-1">When you share photos, they will appear here.</Text>
+        <Text className="text-sm text-ig-muted mt-1 text-center">
+          Be the first to add yours.
+        </Text>
       </View>
     )
   }

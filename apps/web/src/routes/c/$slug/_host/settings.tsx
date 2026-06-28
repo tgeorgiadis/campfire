@@ -2,12 +2,12 @@ import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useMutation, useQuery } from 'convex/react'
 import { useEffect, useState } from 'react'
 import { api } from '@campfire/backend/convex/_generated/api'
-import { EventSettingsScreen } from '@campfire/ui'
+import { EventSettingsContent } from '@campfire/ui'
 import type { SettingsTab } from '@campfire/app-core'
-import type { EventManagerContext } from '~/lib/eventContext'
-import { EventManagerGate } from '~/lib/useEventManager'
+import { useEventManagerContext } from '~/lib/EventManagerLayout'
+import { dashboardQuery, membersQuery } from '~/lib/eventQueries'
 
-export const Route = createFileRoute('/c/$slug/settings')({
+export const Route = createFileRoute('/c/$slug/_host/settings')({
   ssr: false,
   validateSearch: (search: Record<string, unknown>) => ({
     tab:
@@ -15,47 +15,24 @@ export const Route = createFileRoute('/c/$slug/settings')({
         ? (search.tab as SettingsTab)
         : ('general' as SettingsTab),
   }),
+  loader: async ({ context, params }) => {
+    const dashboard = await context.queryClient.ensureQueryData(
+      dashboardQuery(params.slug),
+    )
+    if (dashboard) {
+      await context.queryClient.ensureQueryData(membersQuery(dashboard._id))
+    }
+  },
   component: EventSettings,
 })
 
 function EventSettings() {
-  const { slug } = Route.useParams()
+  const { dashboard } = useEventManagerContext()
   const { tab } = Route.useSearch()
   const navigate = useNavigate()
 
-  return (
-    <EventManagerGate slug={slug}>
-      {(ctx) => (
-        <SettingsContent
-          slug={slug}
-          ctx={ctx}
-          settingsTab={tab}
-          onSettingsTabChange={(next) => {
-            void navigate({
-              to: '/c/$slug/settings',
-              params: { slug },
-              search: { tab: next },
-            })
-          }}
-        />
-      )}
-    </EventManagerGate>
-  )
-}
-
-function SettingsContent({
-  slug,
-  ctx,
-  settingsTab,
-  onSettingsTabChange,
-}: {
-  slug: string
-  ctx: EventManagerContext
-  settingsTab: SettingsTab
-  onSettingsTabChange: (tab: SettingsTab) => void
-}) {
   const members = useQuery(api.campfires.listMembers, {
-    campfireId: ctx.dashboard._id,
+    campfireId: dashboard._id,
   })
 
   const updateGeneral = useMutation(api.campfires.updateGeneral)
@@ -67,15 +44,15 @@ function SettingsContent({
   const inviteMember = useMutation(api.campfires.inviteMember)
   const removeMember = useMutation(api.campfires.removeMember)
 
-  const s = ctx.dashboard.settings
+  const s = dashboard.settings
 
   const [generalForm, setGeneralForm] = useState({
-    name: ctx.dashboard.name,
+    name: dashboard.name,
     eventDate: s.eventDate
       ? new Date(s.eventDate).toISOString().slice(0, 10)
       : '',
     eventType: s.eventType,
-    customSlug: ctx.dashboard.slug,
+    customSlug: dashboard.slug,
   })
 
   const [appearanceForm, setAppearanceForm] = useState({
@@ -115,14 +92,14 @@ function SettingsContent({
 
   useEffect(() => {
     setGeneralForm({
-      name: ctx.dashboard.name,
+      name: dashboard.name,
       eventDate: s.eventDate
         ? new Date(s.eventDate).toISOString().slice(0, 10)
         : '',
       eventType: s.eventType,
-      customSlug: ctx.dashboard.slug,
+      customSlug: dashboard.slug,
     })
-  }, [ctx.dashboard])
+  }, [dashboard, s.eventDate, s.eventType])
 
   const uploadAsset = (kind: 'logo' | 'albumBg' | 'wallBg') => {
     const input = document.createElement('input')
@@ -134,7 +111,7 @@ function SettingsContent({
         return
       }
       const uploadUrl = await generateUploadUrl({
-        campfireId: ctx.dashboard._id,
+        campfireId: dashboard._id,
       })
       const res = await fetch(uploadUrl, {
         method: 'POST',
@@ -147,17 +124,17 @@ function SettingsContent({
       const { storageId } = (await res.json()) as { storageId: string }
       if (kind === 'logo') {
         await updateAppearance({
-          campfireId: ctx.dashboard._id,
+          campfireId: dashboard._id,
           logoStorageId: storageId as never,
         })
       } else if (kind === 'albumBg') {
         await updateAppearance({
-          campfireId: ctx.dashboard._id,
+          campfireId: dashboard._id,
           albumBackgroundStorageId: storageId as never,
         })
       } else {
         await updateWall({
-          campfireId: ctx.dashboard._id,
+          campfireId: dashboard._id,
           wallBackgroundStorageId: storageId as never,
         })
       }
@@ -165,25 +142,18 @@ function SettingsContent({
     input.click()
   }
 
-  if (members === undefined) {
-    return null
-  }
-
   return (
-    <EventSettingsScreen
-      slug={slug}
-      campfires={ctx.campfires}
-      dashboard={ctx.dashboard}
+    <EventSettingsContent
+      dashboard={dashboard}
       members={members}
-      activeTab="settings"
-      settingsTab={settingsTab}
-      onSettingsTabChange={onSettingsTabChange}
-      onNavigate={ctx.nav.onNavigate}
-      onSwitchEvent={ctx.nav.onSwitchEvent}
-      onSignOut={ctx.nav.onSignOut}
-      onCreateCampfire={ctx.nav.onCreateCampfire}
-      onViewAllEvents={ctx.nav.onViewAllEvents}
-      eventSwitcher={ctx.eventSwitcher}
+      settingsTab={tab}
+      onSettingsTabChange={(next) => {
+        void navigate({
+          to: '/c/$slug/settings',
+          params: { slug: dashboard.slug },
+          search: { tab: next },
+        })
+      }}
       generalForm={generalForm}
       onGeneralFormChange={(patch) =>
         setGeneralForm((prev) => ({ ...prev, ...patch }))
@@ -203,16 +173,16 @@ function SettingsContent({
       inviteError={inviteError}
       onSaveGeneral={() => {
         void updateGeneral({
-          campfireId: ctx.dashboard._id,
+          campfireId: dashboard._id,
           name: generalForm.name,
           eventDate: generalForm.eventDate
             ? new Date(generalForm.eventDate).getTime()
             : null,
           eventType: generalForm.eventType,
         }).then(() => {
-          if (generalForm.customSlug !== ctx.dashboard.slug) {
+          if (generalForm.customSlug !== dashboard.slug) {
             void updateSlug({
-              campfireId: ctx.dashboard._id,
+              campfireId: dashboard._id,
               slug: generalForm.customSlug,
             })
           }
@@ -220,7 +190,7 @@ function SettingsContent({
       }}
       onSaveAppearance={() => {
         void updateAppearance({
-          campfireId: ctx.dashboard._id,
+          campfireId: dashboard._id,
           themeColor: appearanceForm.themeColor,
           displayLanguage: appearanceForm.displayLanguage,
           welcomeScreenEnabled: appearanceForm.welcomeScreenEnabled,
@@ -232,7 +202,7 @@ function SettingsContent({
       }}
       onSaveWall={() => {
         void updateWall({
-          campfireId: ctx.dashboard._id,
+          campfireId: dashboard._id,
           imageDurationSec: Number(wallForm.imageDurationSec) || 8,
           videoDurationSec: Number(wallForm.videoDurationSec) || 12,
           textDurationSec: Number(wallForm.textDurationSec) || 10,
@@ -245,14 +215,14 @@ function SettingsContent({
       }}
       onSaveModeration={() => {
         void updateModeration({
-          campfireId: ctx.dashboard._id,
+          campfireId: dashboard._id,
           ...moderationForm,
         })
       }}
       onInvite={() => {
         setInviteError(null)
         void inviteMember({
-          campfireId: ctx.dashboard._id,
+          campfireId: dashboard._id,
           email: inviteEmail,
         })
           .then(() => setInviteEmail(''))
@@ -262,7 +232,7 @@ function SettingsContent({
       }}
       onRemoveMember={(memberId) => {
         void removeMember({
-          campfireId: ctx.dashboard._id,
+          campfireId: dashboard._id,
           memberId,
         })
       }}

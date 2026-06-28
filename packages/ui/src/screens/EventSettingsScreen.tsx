@@ -18,6 +18,7 @@ import { EventShell, type EventNavTab } from '../components/EventShell'
 import { PrimaryButton, TextButton } from '../components/PrimaryButton'
 import { TextField } from '../components/TextField'
 import { EVENT_TYPE_OPTIONS } from '../lib/eventTypes'
+import { SkeletonBlock } from '../components/skeletons/SkeletonBlock'
 
 const SETTINGS_TABS = [
   { id: 'general', label: 'General' },
@@ -27,19 +28,10 @@ const SETTINGS_TABS = [
   { id: 'collaborators', label: 'Collaborators' },
 ]
 
-export function EventSettingsScreen({
-  slug,
-  campfires,
+export function EventSettingsContent({
   dashboard,
   members,
-  activeTab,
   settingsTab,
-  userEmail,
-  onNavigate,
-  onSwitchEvent,
-  onSignOut,
-  onCreateCampfire,
-  onViewAllEvents,
   onSettingsTabChange,
   onSaveGeneral,
   onSaveAppearance,
@@ -48,7 +40,6 @@ export function EventSettingsScreen({
   onInvite,
   onRemoveMember,
   onUploadAsset,
-  eventSwitcher,
   generalForm,
   onGeneralFormChange,
   appearanceForm,
@@ -61,18 +52,9 @@ export function EventSettingsScreen({
   onInviteEmailChange,
   inviteError,
 }: {
-  slug: string
-  campfires: CampfireSummary[]
   dashboard: CampfireDashboard
-  members: CampfireMember[]
-  activeTab: EventNavTab
+  members?: CampfireMember[]
   settingsTab: SettingsTab
-  userEmail?: string | null
-  onNavigate: (tab: EventNavTab) => void
-  onSwitchEvent: (slug: string) => void
-  onSignOut: () => void
-  onCreateCampfire: () => void
-  onViewAllEvents: () => void
   onSettingsTabChange: (tab: SettingsTab) => void
   onSaveGeneral: () => void
   onSaveAppearance: () => void
@@ -81,7 +63,6 @@ export function EventSettingsScreen({
   onInvite: () => void
   onRemoveMember: (memberId: CampfireMember['_id']) => void
   onUploadAsset: (kind: 'logo' | 'albumBg' | 'wallBg') => void
-  eventSwitcher?: ReactNode
   generalForm: {
     name: string
     eventDate: string
@@ -128,18 +109,7 @@ export function EventSettingsScreen({
   const isOwner = dashboard.role === 'owner'
 
   return (
-    <EventShell
-      slug={slug}
-      campfires={campfires}
-      activeTab={activeTab}
-      userEmail={userEmail}
-      onNavigate={onNavigate}
-      onSwitchEvent={onSwitchEvent}
-      onSignOut={onSignOut}
-      onCreateCampfire={onCreateCampfire}
-      onViewAllEvents={onViewAllEvents}
-      eventSwitcher={eventSwitcher}
-    >
+    <>
       <SettingsTabBar
         tabs={SETTINGS_TABS}
         active={settingsTab}
@@ -531,7 +501,19 @@ export function EventSettingsScreen({
               </Text>
               <Text className="w-24 text-xs font-semibold text-ig-muted">Role</Text>
             </View>
-            {members.map((member) => (
+            {members == null ? (
+              <>
+                <View className="flex-row px-4 py-3 border-b border-ig-border items-center gap-4">
+                  <SkeletonBlock className="h-4 flex-1" />
+                  <SkeletonBlock className="h-4 w-16" />
+                </View>
+                <View className="flex-row px-4 py-3 border-b border-ig-border items-center gap-4">
+                  <SkeletonBlock className="h-4 flex-1" />
+                  <SkeletonBlock className="h-4 w-16" />
+                </View>
+              </>
+            ) : (
+              members.map((member) => (
               <View
                 key={member._id}
                 className="flex-row px-4 py-3 border-b border-ig-border items-center"
@@ -549,10 +531,150 @@ export function EventSettingsScreen({
                   ) : null}
                 </View>
               </View>
-            ))}
+              ))
+            )}
           </View>
         </View>
       ) : null}
+    </>
+  )
+}
+
+export function EventSettingsScreen({
+  slug,
+  campfires,
+  dashboard,
+  members,
+  activeTab,
+  settingsTab,
+  userEmail,
+  onNavigate,
+  onSwitchEvent,
+  onSignOut,
+  onCreateCampfire,
+  onViewAllEvents,
+  onSettingsTabChange,
+  onSaveGeneral,
+  onSaveAppearance,
+  onSaveWall,
+  onSaveModeration,
+  onInvite,
+  onRemoveMember,
+  onUploadAsset,
+  eventSwitcher,
+  generalForm,
+  onGeneralFormChange,
+  appearanceForm,
+  onAppearanceFormChange,
+  wallForm,
+  onWallFormChange,
+  moderationForm,
+  onModerationFormChange,
+  inviteEmail,
+  onInviteEmailChange,
+  inviteError,
+}: {
+  slug: string
+  campfires: CampfireSummary[]
+  dashboard: CampfireDashboard
+  members?: CampfireMember[]
+  activeTab: EventNavTab
+  settingsTab: SettingsTab
+  userEmail?: string | null
+  onNavigate: (tab: EventNavTab) => void
+  onSwitchEvent: (slug: string) => void
+  onSignOut: () => void
+  onCreateCampfire: () => void
+  onViewAllEvents: () => void
+  onSettingsTabChange: (tab: SettingsTab) => void
+  onSaveGeneral: () => void
+  onSaveAppearance: () => void
+  onSaveWall: () => void
+  onSaveModeration: () => void
+  onInvite: () => void
+  onRemoveMember: (memberId: CampfireMember['_id']) => void
+  onUploadAsset: (kind: 'logo' | 'albumBg' | 'wallBg') => void
+  eventSwitcher?: ReactNode
+  generalForm: {
+    name: string
+    eventDate: string
+    eventType: EventType
+    customSlug: string
+  }
+  onGeneralFormChange: (patch: Partial<typeof generalForm>) => void
+  appearanceForm: {
+    themeColor: string
+    displayLanguage: string
+    welcomeScreenEnabled: boolean
+    welcomeScreenTitle: string
+    welcomeScreenMessage: string
+    removeBranding: boolean
+    captionTheme: CaptionTheme
+  }
+  onAppearanceFormChange: (patch: Partial<typeof appearanceForm>) => void
+  wallForm: {
+    imageDurationSec: string
+    videoDurationSec: string
+    textDurationSec: string
+    autoVideoDuration: boolean
+    hideSideImages: boolean
+    hideWallQr: boolean
+    hideWallCaption: boolean
+    hideWallLikes: boolean
+  }
+  onWallFormChange: (patch: Partial<typeof wallForm>) => void
+  moderationForm: {
+    requireApproval: boolean
+    contentFilterEnabled: boolean
+    allowedPhotos: boolean
+    allowedVideos: boolean
+    allowedText: boolean
+    albumPermission: AlbumPermission
+    disableGuestDownload: boolean
+    disableLikes: boolean
+  }
+  onModerationFormChange: (patch: Partial<typeof moderationForm>) => void
+  inviteEmail: string
+  onInviteEmailChange: (value: string) => void
+  inviteError: string | null
+}) {
+  return (
+    <EventShell
+      slug={slug}
+      campfires={campfires}
+      activeTab={activeTab}
+      userEmail={userEmail}
+      onNavigate={onNavigate}
+      onSwitchEvent={onSwitchEvent}
+      onSignOut={onSignOut}
+      onCreateCampfire={onCreateCampfire}
+      onViewAllEvents={onViewAllEvents}
+      eventSwitcher={eventSwitcher}
+    >
+      <EventSettingsContent
+        dashboard={dashboard}
+        members={members}
+        settingsTab={settingsTab}
+        onSettingsTabChange={onSettingsTabChange}
+        onSaveGeneral={onSaveGeneral}
+        onSaveAppearance={onSaveAppearance}
+        onSaveWall={onSaveWall}
+        onSaveModeration={onSaveModeration}
+        onInvite={onInvite}
+        onRemoveMember={onRemoveMember}
+        onUploadAsset={onUploadAsset}
+        generalForm={generalForm}
+        onGeneralFormChange={onGeneralFormChange}
+        appearanceForm={appearanceForm}
+        onAppearanceFormChange={onAppearanceFormChange}
+        wallForm={wallForm}
+        onWallFormChange={onWallFormChange}
+        moderationForm={moderationForm}
+        onModerationFormChange={onModerationFormChange}
+        inviteEmail={inviteEmail}
+        onInviteEmailChange={onInviteEmailChange}
+        inviteError={inviteError}
+      />
     </EventShell>
   )
 }

@@ -31,7 +31,7 @@ export function getRouter() {
       defaultPreload: 'intent',
       context: { queryClient },
       scrollRestoration: true,
-      defaultPreloadStaleTime: 0, // Let React Query handle all caching
+      defaultPreloadStaleTime: 30_000,
       defaultErrorComponent: (err) => <p>{err.error.stack}</p>,
       defaultNotFoundComponent: () => <p>not found</p>,
       Wrap: ({ children }) => (

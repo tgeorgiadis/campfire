@@ -19,7 +19,11 @@ export default defineConfig({
   resolve: {
     alias: {
       'inline-style-prefixer/lib': 'inline-style-prefixer/es',
+      'css-in-js-utils/lib': 'css-in-js-utils/es',
     },
+  },
+  ssr: {
+    noExternal: ['react-native-web', 'inline-style-prefixer', 'css-in-js-utils'],
   },
   legacy: {
     inconsistentCjsInterop: true,

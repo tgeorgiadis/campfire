@@ -114,21 +114,21 @@ export function WebWallQrWidget({ url }: { url: string }) {
       <div className="flex justify-center gap-2 mb-2 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity">
         <ToolbarButton
           label="Remove QR code"
-          className="bg-red-600 hover:bg-red-700 text-white"
+          className="bg-ig-red hover:opacity-90 text-white"
           onClick={() => setVisible(false)}
         >
           ×
         </ToolbarButton>
         <ToolbarButton
           label="Decrease QR size"
-          className="bg-neutral-800 hover:bg-neutral-700 text-white"
+          className="bg-cf-charcoal hover:opacity-90 text-white"
           onClick={() => setSize((s) => Math.max(MIN_SIZE, s - SIZE_STEP))}
         >
           −
         </ToolbarButton>
         <ToolbarButton
           label="Increase QR size"
-          className="bg-neutral-800 hover:bg-neutral-700 text-white"
+          className="bg-cf-charcoal hover:opacity-90 text-white"
           onClick={() => setSize((s) => Math.min(MAX_SIZE, s + SIZE_STEP))}
         >
           +

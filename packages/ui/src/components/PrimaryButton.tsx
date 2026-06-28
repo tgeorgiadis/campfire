@@ -17,7 +17,7 @@ export function PrimaryButton({
       onPress={onPress}
       disabled={disabled}
       className={`rounded-lg py-2.5 px-4 items-center ${disabled ? 'opacity-50' : ''} ${
-        isPrimary ? 'bg-ig-blue' : 'border border-ig-border bg-ig-surface'
+        isPrimary ? 'bg-cf-accent' : 'border border-ig-border bg-ig-surface'
       }`}
     >
       <Text
@@ -38,7 +38,7 @@ export function TextButton({
 }) {
   return (
     <Pressable onPress={onPress}>
-      <Text className="text-sm text-ig-blue font-semibold">{label}</Text>
+      <Text className="text-sm text-cf-accent font-semibold">{label}</Text>
     </Pressable>
   )
 }

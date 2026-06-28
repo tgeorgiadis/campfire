@@ -16,6 +16,8 @@ export function EventShell({
   onViewAllEvents,
   onCreateCampfire,
   eventSwitcher,
+  onNavIntent,
+  contentDimmed,
   children,
 }: {
   slug: string
@@ -28,6 +30,8 @@ export function EventShell({
   onViewAllEvents?: () => void
   onCreateCampfire?: () => void
   eventSwitcher?: ReactNode
+  onNavIntent?: (tab: EventNavTab) => void
+  contentDimmed?: boolean
   children: ReactNode
 }) {
   const current = campfires.find((c) => c.slug === slug)
@@ -82,6 +86,7 @@ export function EventShell({
               label="Home"
               active={activeTab === 'home'}
               onPress={() => onNavigate('home')}
+              onIntent={() => onNavIntent?.('home')}
               accent
             />
             <SidebarNavItem
@@ -89,6 +94,7 @@ export function EventShell({
               label="Photos & Videos"
               active={activeTab === 'photos'}
               onPress={() => onNavigate('photos')}
+              onIntent={() => onNavIntent?.('photos')}
               accent
             />
             <SidebarNavItem
@@ -96,6 +102,7 @@ export function EventShell({
               label="Event Settings"
               active={activeTab === 'settings'}
               onPress={() => onNavigate('settings')}
+              onIntent={() => onNavIntent?.('settings')}
               accent
             />
           </View>
@@ -116,21 +123,30 @@ export function EventShell({
             <CampfireLogo size="sm" />
             {currentEventHeader}
           </View>
-          <View className="max-w-[1100px] w-full px-4 py-6">{children}</View>
+          <View className={`max-w-[1100px] w-full px-4 py-6 ${contentDimmed ? 'opacity-50' : ''}`}>
+            {children}
+          </View>
         </View>
       </View>
 
       <View className="md:hidden fixed bottom-0 left-0 right-0 h-[52px] border-t border-ig-border bg-ig-surface flex-row items-center justify-around z-20">
-        <MobileTab label="Home" active={activeTab === 'home'} onPress={() => onNavigate('home')} />
+        <MobileTab
+          label="Home"
+          active={activeTab === 'home'}
+          onPress={() => onNavigate('home')}
+          onIntent={() => onNavIntent?.('home')}
+        />
         <MobileTab
           label="Photos"
           active={activeTab === 'photos'}
           onPress={() => onNavigate('photos')}
+          onIntent={() => onNavIntent?.('photos')}
         />
         <MobileTab
           label="Settings"
           active={activeTab === 'settings'}
           onPress={() => onNavigate('settings')}
+          onIntent={() => onNavIntent?.('settings')}
         />
       </View>
     </View>
@@ -141,13 +157,20 @@ function MobileTab({
   label,
   active,
   onPress,
+  onIntent,
 }: {
   label: string
   active: boolean
   onPress: () => void
+  onIntent?: () => void
 }) {
   return (
-    <Pressable onPress={onPress} className="py-2 px-4">
+    <Pressable
+      onPress={onPress}
+      onHoverIn={onIntent}
+      onFocus={onIntent}
+      className="py-2 px-4"
+    >
       <Text
         className={`text-xs font-medium ${active ? 'text-cf-accent' : 'text-ig-muted'}`}
       >

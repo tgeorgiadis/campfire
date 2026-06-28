@@ -1,9 +1,11 @@
 import appCss from '@campfire/ui/global.css?url'
+import { NotFoundScreen } from '@campfire/ui'
 import {
   HeadContent,
   Outlet,
   Scripts,
   createRootRouteWithContext,
+  useNavigate,
 } from '@tanstack/react-router'
 import * as React from 'react'
 import type { QueryClient } from '@tanstack/react-query'
@@ -22,6 +24,11 @@ export const Route = createRootRouteWithContext<{
       },
       {
         title: 'Campfire',
+      },
+      {
+        name: 'description',
+        content:
+          'One shared album for your gathering — guests scan, upload, and watch memories grow on the photo wall.',
       },
       {
         name: 'theme-color',
@@ -51,9 +58,14 @@ export const Route = createRootRouteWithContext<{
       { rel: 'icon', href: '/favicon.ico' },
     ],
   }),
-  notFoundComponent: () => <div>Route not found</div>,
+  notFoundComponent: RootNotFound,
   component: RootComponent,
 })
+
+function RootNotFound() {
+  const navigate = useNavigate()
+  return <NotFoundScreen onHome={() => void navigate({ to: '/' })} />
+}
 
 function RootComponent() {
   return (

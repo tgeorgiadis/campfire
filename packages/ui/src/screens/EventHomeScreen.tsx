@@ -10,6 +10,82 @@ import {
 import { EventShell, type EventNavTab } from '../components/EventShell'
 import type { CampfireSummary } from '@campfire/app-core'
 
+export function EventHomeContent({
+  dashboard,
+  joinUrl,
+  albumUrl,
+  wallUrl,
+  qrElement,
+  onCopy,
+  onOpenUrl,
+  onDownloadQr,
+}: {
+  dashboard: CampfireDashboard
+  joinUrl: string
+  albumUrl: string
+  wallUrl: string
+  qrElement?: ReactNode
+  onCopy: (url: string) => void
+  onOpenUrl: (url: string) => void
+  onDownloadQr?: () => void
+}) {
+  return (
+    <View className="gap-6">
+      <View className="gap-2">
+        <Text className="text-3xl font-bold text-ig-text">{dashboard.name}</Text>
+        <Text className="text-sm text-ig-muted">
+          Here you&apos;ll find everything you need to share your album and photo wall with
+          guests.
+        </Text>
+      </View>
+
+      <DashboardCard
+        title="Your Digital Album"
+        description="Share this link or QR code so everyone who came can upload and view photos."
+      >
+        <View className="flex-row flex-wrap gap-6 items-start">
+          <View className="flex-1 min-w-[280px] gap-4">
+            <CopyField
+              value={joinUrl}
+              onCopy={() => onCopy(joinUrl)}
+              onOpen={() => onOpenUrl(albumUrl)}
+            />
+            <View className="items-center gap-3">
+              {qrElement}
+              {onDownloadQr ? (
+                <Text
+                  className="text-sm text-cf-accent font-medium"
+                  onPress={onDownloadQr}
+                >
+                  Download QR Code
+                </Text>
+              ) : null}
+            </View>
+          </View>
+          <PhoneMockup />
+        </View>
+      </DashboardCard>
+
+      <DashboardCard
+        title="Your Photo Wall"
+        description="Uploads appear here automatically. Display on TVs or screens at your event."
+      >
+        <View className="gap-4">
+          <CopyField
+            value={wallUrl}
+            onCopy={() => onCopy(wallUrl)}
+            onOpen={() => onOpenUrl(wallUrl)}
+          />
+          <MonitorMockup qrUrl={joinUrl} />
+          <Text className="text-xs text-ig-muted">
+            Display on: laptop, monitor, or TV — open the link above in fullscreen.
+          </Text>
+        </View>
+      </DashboardCard>
+    </View>
+  )
+}
+
 export function EventHomeScreen({
   slug,
   campfires,
@@ -62,63 +138,16 @@ export function EventHomeScreen({
       onViewAllEvents={onViewAllEvents}
       eventSwitcher={eventSwitcher}
     >
-      <View className="gap-6">
-        <View className="gap-2">
-          <View className="flex-row items-center gap-3">
-            <Text className="text-3xl font-bold text-ig-text">{dashboard.name}</Text>
-            <View className="bg-cf-accent-light rounded-full px-3 py-1">
-              <Text className="text-xs font-semibold text-cf-accent">Plan: Free</Text>
-            </View>
-          </View>
-          <Text className="text-sm text-ig-muted">
-            Here you&apos;ll find everything you need to manage your party.
-          </Text>
-        </View>
-
-        <DashboardCard
-          title="Your Digital Album"
-          description="Share this link or QR code so guests can upload and view photos."
-        >
-          <View className="flex-row flex-wrap gap-6 items-start">
-            <View className="flex-1 min-w-[280px] gap-4">
-              <CopyField
-                value={joinUrl}
-                onCopy={() => onCopy(joinUrl)}
-                onOpen={() => onOpenUrl(albumUrl)}
-              />
-              <View className="items-center gap-3">
-                {qrElement}
-                {onDownloadQr ? (
-                  <Text
-                    className="text-sm text-cf-accent font-medium"
-                    onPress={onDownloadQr}
-                  >
-                    Download QR Code
-                  </Text>
-                ) : null}
-              </View>
-            </View>
-            <PhoneMockup />
-          </View>
-        </DashboardCard>
-
-        <DashboardCard
-          title="Your Photo Wall"
-          description="Uploads appear here automatically. Display on TVs or screens at your event."
-        >
-          <View className="gap-4">
-            <CopyField
-              value={wallUrl}
-              onCopy={() => onCopy(wallUrl)}
-              onOpen={() => onOpenUrl(wallUrl)}
-            />
-            <MonitorMockup qrUrl={joinUrl} />
-            <Text className="text-xs text-ig-muted">
-              Display on: laptop, monitor, or TV — open the link above in fullscreen.
-            </Text>
-          </View>
-        </DashboardCard>
-      </View>
+      <EventHomeContent
+        dashboard={dashboard}
+        joinUrl={joinUrl}
+        albumUrl={albumUrl}
+        wallUrl={wallUrl}
+        qrElement={qrElement}
+        onCopy={onCopy}
+        onOpenUrl={onOpenUrl}
+        onDownloadQr={onDownloadQr}
+      />
     </EventShell>
   )
 }

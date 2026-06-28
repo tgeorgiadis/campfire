@@ -48,7 +48,7 @@ export function CreateCampfireScreen({
           <View className="w-full">
             <TextField value={joinUrl} onChangeText={() => {}} editable={false} />
           </View>
-          <PrimaryButton label="View board" onPress={onOpenBoard} />
+          <PrimaryButton label="Open campfire" onPress={onOpenBoard} />
         </View>
       </AppShell>
     )

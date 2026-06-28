@@ -47,17 +47,21 @@ export function SidebarNavItem({
   label,
   active,
   onPress,
+  onIntent,
   accent,
 }: {
   icon: string
   label: string
   active?: boolean
   onPress: () => void
+  onIntent?: () => void
   accent?: boolean
 }) {
   return (
     <Pressable
       onPress={onPress}
+      onHoverIn={onIntent}
+      onFocus={onIntent}
       className={`flex-row items-center gap-3 py-2.5 px-3 rounded-lg ${
         active && accent ? 'bg-cf-accent-light' : ''
       }`}

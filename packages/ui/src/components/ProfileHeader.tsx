@@ -74,7 +74,7 @@ export function ProfileHeader({
 function TextButtonLink({ label, onPress }: { label: string; onPress: () => void }) {
   return (
     <Pressable onPress={onPress}>
-      <Text className="text-sm text-ig-blue font-semibold">{label}</Text>
+      <Text className="text-sm text-cf-accent font-semibold">{label}</Text>
     </Pressable>
   )
 }

@@ -10,27 +10,28 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SignInRouteImport } from './routes/sign-in'
-import { Route as ProfileRouteImport } from './routes/profile'
+import { Route as BrandRouteImport } from './routes/brand'
 import { Route as SplatRouteImport } from './routes/$'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CampfiresNewRouteImport } from './routes/campfires/new'
 import { Route as CSlugIndexRouteImport } from './routes/c/$slug/index'
 import { Route as CSlugWallRouteImport } from './routes/c/$slug/wall'
-import { Route as CSlugSettingsRouteImport } from './routes/c/$slug/settings'
-import { Route as CSlugPhotosRouteImport } from './routes/c/$slug/photos'
 import { Route as CSlugJoinRouteImport } from './routes/c/$slug/join'
-import { Route as CSlugHomeRouteImport } from './routes/c/$slug/home'
-import { Route as CSlugEventsRouteImport } from './routes/c/$slug/events'
 import { Route as CSlugAlbumRouteImport } from './routes/c/$slug/album'
+import { Route as CSlugHostRouteRouteImport } from './routes/c/$slug/_host/route'
+import { Route as CSlugHostSettingsRouteImport } from './routes/c/$slug/_host/settings'
+import { Route as CSlugHostPhotosRouteImport } from './routes/c/$slug/_host/photos'
+import { Route as CSlugHostHomeRouteImport } from './routes/c/$slug/_host/home'
+import { Route as CSlugHostEventsRouteImport } from './routes/c/$slug/_host/events'
 
 const SignInRoute = SignInRouteImport.update({
   id: '/sign-in',
   path: '/sign-in',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ProfileRoute = ProfileRouteImport.update({
-  id: '/profile',
-  path: '/profile',
+const BrandRoute = BrandRouteImport.update({
+  id: '/brand',
+  path: '/brand',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SplatRoute = SplatRouteImport.update({
@@ -58,29 +59,9 @@ const CSlugWallRoute = CSlugWallRouteImport.update({
   path: '/c/$slug/wall',
   getParentRoute: () => rootRouteImport,
 } as any)
-const CSlugSettingsRoute = CSlugSettingsRouteImport.update({
-  id: '/c/$slug/settings',
-  path: '/c/$slug/settings',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CSlugPhotosRoute = CSlugPhotosRouteImport.update({
-  id: '/c/$slug/photos',
-  path: '/c/$slug/photos',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const CSlugJoinRoute = CSlugJoinRouteImport.update({
   id: '/c/$slug/join',
   path: '/c/$slug/join',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CSlugHomeRoute = CSlugHomeRouteImport.update({
-  id: '/c/$slug/home',
-  path: '/c/$slug/home',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CSlugEventsRoute = CSlugEventsRouteImport.update({
-  id: '/c/$slug/events',
-  path: '/c/$slug/events',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CSlugAlbumRoute = CSlugAlbumRouteImport.update({
@@ -88,113 +69,139 @@ const CSlugAlbumRoute = CSlugAlbumRouteImport.update({
   path: '/c/$slug/album',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CSlugHostRouteRoute = CSlugHostRouteRouteImport.update({
+  id: '/c/$slug/_host',
+  path: '/c/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CSlugHostSettingsRoute = CSlugHostSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => CSlugHostRouteRoute,
+} as any)
+const CSlugHostPhotosRoute = CSlugHostPhotosRouteImport.update({
+  id: '/photos',
+  path: '/photos',
+  getParentRoute: () => CSlugHostRouteRoute,
+} as any)
+const CSlugHostHomeRoute = CSlugHostHomeRouteImport.update({
+  id: '/home',
+  path: '/home',
+  getParentRoute: () => CSlugHostRouteRoute,
+} as any)
+const CSlugHostEventsRoute = CSlugHostEventsRouteImport.update({
+  id: '/events',
+  path: '/events',
+  getParentRoute: () => CSlugHostRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
-  '/profile': typeof ProfileRoute
+  '/brand': typeof BrandRoute
   '/sign-in': typeof SignInRoute
   '/campfires/new': typeof CampfiresNewRoute
+  '/c/$slug': typeof CSlugHostRouteRouteWithChildren
   '/c/$slug/album': typeof CSlugAlbumRoute
-  '/c/$slug/events': typeof CSlugEventsRoute
-  '/c/$slug/home': typeof CSlugHomeRoute
   '/c/$slug/join': typeof CSlugJoinRoute
-  '/c/$slug/photos': typeof CSlugPhotosRoute
-  '/c/$slug/settings': typeof CSlugSettingsRoute
   '/c/$slug/wall': typeof CSlugWallRoute
   '/c/$slug/': typeof CSlugIndexRoute
+  '/c/$slug/events': typeof CSlugHostEventsRoute
+  '/c/$slug/home': typeof CSlugHostHomeRoute
+  '/c/$slug/photos': typeof CSlugHostPhotosRoute
+  '/c/$slug/settings': typeof CSlugHostSettingsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
-  '/profile': typeof ProfileRoute
+  '/brand': typeof BrandRoute
   '/sign-in': typeof SignInRoute
   '/campfires/new': typeof CampfiresNewRoute
-  '/c/$slug/album': typeof CSlugAlbumRoute
-  '/c/$slug/events': typeof CSlugEventsRoute
-  '/c/$slug/home': typeof CSlugHomeRoute
-  '/c/$slug/join': typeof CSlugJoinRoute
-  '/c/$slug/photos': typeof CSlugPhotosRoute
-  '/c/$slug/settings': typeof CSlugSettingsRoute
-  '/c/$slug/wall': typeof CSlugWallRoute
   '/c/$slug': typeof CSlugIndexRoute
+  '/c/$slug/album': typeof CSlugAlbumRoute
+  '/c/$slug/join': typeof CSlugJoinRoute
+  '/c/$slug/wall': typeof CSlugWallRoute
+  '/c/$slug/events': typeof CSlugHostEventsRoute
+  '/c/$slug/home': typeof CSlugHostHomeRoute
+  '/c/$slug/photos': typeof CSlugHostPhotosRoute
+  '/c/$slug/settings': typeof CSlugHostSettingsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
-  '/profile': typeof ProfileRoute
+  '/brand': typeof BrandRoute
   '/sign-in': typeof SignInRoute
   '/campfires/new': typeof CampfiresNewRoute
+  '/c/$slug/_host': typeof CSlugHostRouteRouteWithChildren
   '/c/$slug/album': typeof CSlugAlbumRoute
-  '/c/$slug/events': typeof CSlugEventsRoute
-  '/c/$slug/home': typeof CSlugHomeRoute
   '/c/$slug/join': typeof CSlugJoinRoute
-  '/c/$slug/photos': typeof CSlugPhotosRoute
-  '/c/$slug/settings': typeof CSlugSettingsRoute
   '/c/$slug/wall': typeof CSlugWallRoute
   '/c/$slug/': typeof CSlugIndexRoute
+  '/c/$slug/_host/events': typeof CSlugHostEventsRoute
+  '/c/$slug/_host/home': typeof CSlugHostHomeRoute
+  '/c/$slug/_host/photos': typeof CSlugHostPhotosRoute
+  '/c/$slug/_host/settings': typeof CSlugHostSettingsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/$'
-    | '/profile'
+    | '/brand'
     | '/sign-in'
     | '/campfires/new'
+    | '/c/$slug'
     | '/c/$slug/album'
-    | '/c/$slug/events'
-    | '/c/$slug/home'
     | '/c/$slug/join'
-    | '/c/$slug/photos'
-    | '/c/$slug/settings'
     | '/c/$slug/wall'
     | '/c/$slug/'
+    | '/c/$slug/events'
+    | '/c/$slug/home'
+    | '/c/$slug/photos'
+    | '/c/$slug/settings'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/$'
-    | '/profile'
+    | '/brand'
     | '/sign-in'
     | '/campfires/new'
+    | '/c/$slug'
     | '/c/$slug/album'
+    | '/c/$slug/join'
+    | '/c/$slug/wall'
     | '/c/$slug/events'
     | '/c/$slug/home'
-    | '/c/$slug/join'
     | '/c/$slug/photos'
     | '/c/$slug/settings'
-    | '/c/$slug/wall'
-    | '/c/$slug'
   id:
     | '__root__'
     | '/'
     | '/$'
-    | '/profile'
+    | '/brand'
     | '/sign-in'
     | '/campfires/new'
+    | '/c/$slug/_host'
     | '/c/$slug/album'
-    | '/c/$slug/events'
-    | '/c/$slug/home'
     | '/c/$slug/join'
-    | '/c/$slug/photos'
-    | '/c/$slug/settings'
     | '/c/$slug/wall'
     | '/c/$slug/'
+    | '/c/$slug/_host/events'
+    | '/c/$slug/_host/home'
+    | '/c/$slug/_host/photos'
+    | '/c/$slug/_host/settings'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   SplatRoute: typeof SplatRoute
-  ProfileRoute: typeof ProfileRoute
+  BrandRoute: typeof BrandRoute
   SignInRoute: typeof SignInRoute
   CampfiresNewRoute: typeof CampfiresNewRoute
+  CSlugHostRouteRoute: typeof CSlugHostRouteRouteWithChildren
   CSlugAlbumRoute: typeof CSlugAlbumRoute
-  CSlugEventsRoute: typeof CSlugEventsRoute
-  CSlugHomeRoute: typeof CSlugHomeRoute
   CSlugJoinRoute: typeof CSlugJoinRoute
-  CSlugPhotosRoute: typeof CSlugPhotosRoute
-  CSlugSettingsRoute: typeof CSlugSettingsRoute
   CSlugWallRoute: typeof CSlugWallRoute
   CSlugIndexRoute: typeof CSlugIndexRoute
 }
@@ -208,11 +215,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SignInRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/profile': {
-      id: '/profile'
-      path: '/profile'
-      fullPath: '/profile'
-      preLoaderRoute: typeof ProfileRouteImport
+    '/brand': {
+      id: '/brand'
+      path: '/brand'
+      fullPath: '/brand'
+      preLoaderRoute: typeof BrandRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/$': {
@@ -250,39 +257,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CSlugWallRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/c/$slug/settings': {
-      id: '/c/$slug/settings'
-      path: '/c/$slug/settings'
-      fullPath: '/c/$slug/settings'
-      preLoaderRoute: typeof CSlugSettingsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/c/$slug/photos': {
-      id: '/c/$slug/photos'
-      path: '/c/$slug/photos'
-      fullPath: '/c/$slug/photos'
-      preLoaderRoute: typeof CSlugPhotosRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/c/$slug/join': {
       id: '/c/$slug/join'
       path: '/c/$slug/join'
       fullPath: '/c/$slug/join'
       preLoaderRoute: typeof CSlugJoinRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/c/$slug/home': {
-      id: '/c/$slug/home'
-      path: '/c/$slug/home'
-      fullPath: '/c/$slug/home'
-      preLoaderRoute: typeof CSlugHomeRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/c/$slug/events': {
-      id: '/c/$slug/events'
-      path: '/c/$slug/events'
-      fullPath: '/c/$slug/events'
-      preLoaderRoute: typeof CSlugEventsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/c/$slug/album': {
@@ -292,21 +271,71 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CSlugAlbumRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/c/$slug/_host': {
+      id: '/c/$slug/_host'
+      path: '/c/$slug'
+      fullPath: '/c/$slug'
+      preLoaderRoute: typeof CSlugHostRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/c/$slug/_host/settings': {
+      id: '/c/$slug/_host/settings'
+      path: '/settings'
+      fullPath: '/c/$slug/settings'
+      preLoaderRoute: typeof CSlugHostSettingsRouteImport
+      parentRoute: typeof CSlugHostRouteRoute
+    }
+    '/c/$slug/_host/photos': {
+      id: '/c/$slug/_host/photos'
+      path: '/photos'
+      fullPath: '/c/$slug/photos'
+      preLoaderRoute: typeof CSlugHostPhotosRouteImport
+      parentRoute: typeof CSlugHostRouteRoute
+    }
+    '/c/$slug/_host/home': {
+      id: '/c/$slug/_host/home'
+      path: '/home'
+      fullPath: '/c/$slug/home'
+      preLoaderRoute: typeof CSlugHostHomeRouteImport
+      parentRoute: typeof CSlugHostRouteRoute
+    }
+    '/c/$slug/_host/events': {
+      id: '/c/$slug/_host/events'
+      path: '/events'
+      fullPath: '/c/$slug/events'
+      preLoaderRoute: typeof CSlugHostEventsRouteImport
+      parentRoute: typeof CSlugHostRouteRoute
+    }
   }
 }
+
+interface CSlugHostRouteRouteChildren {
+  CSlugHostEventsRoute: typeof CSlugHostEventsRoute
+  CSlugHostHomeRoute: typeof CSlugHostHomeRoute
+  CSlugHostPhotosRoute: typeof CSlugHostPhotosRoute
+  CSlugHostSettingsRoute: typeof CSlugHostSettingsRoute
+}
+
+const CSlugHostRouteRouteChildren: CSlugHostRouteRouteChildren = {
+  CSlugHostEventsRoute: CSlugHostEventsRoute,
+  CSlugHostHomeRoute: CSlugHostHomeRoute,
+  CSlugHostPhotosRoute: CSlugHostPhotosRoute,
+  CSlugHostSettingsRoute: CSlugHostSettingsRoute,
+}
+
+const CSlugHostRouteRouteWithChildren = CSlugHostRouteRoute._addFileChildren(
+  CSlugHostRouteRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   SplatRoute: SplatRoute,
-  ProfileRoute: ProfileRoute,
+  BrandRoute: BrandRoute,
   SignInRoute: SignInRoute,
   CampfiresNewRoute: CampfiresNewRoute,
+  CSlugHostRouteRoute: CSlugHostRouteRouteWithChildren,
   CSlugAlbumRoute: CSlugAlbumRoute,
-  CSlugEventsRoute: CSlugEventsRoute,
-  CSlugHomeRoute: CSlugHomeRoute,
   CSlugJoinRoute: CSlugJoinRoute,
-  CSlugPhotosRoute: CSlugPhotosRoute,
-  CSlugSettingsRoute: CSlugSettingsRoute,
   CSlugWallRoute: CSlugWallRoute,
   CSlugIndexRoute: CSlugIndexRoute,
 }

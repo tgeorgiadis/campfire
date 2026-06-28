@@ -3,7 +3,7 @@ import { useQuery } from 'convex/react'
 import { useEffect } from 'react'
 import { api } from '@campfire/backend/convex/_generated/api'
 import { buildAlbumUrl, buildJoinUrl, getGuestToken } from '@campfire/app-core'
-import { LoadingScreen } from '@campfire/ui'
+import { PhotoWallSkeleton, WallUnavailableScreen } from '@campfire/ui'
 import { WebWallExperience } from '~/lib/WebWallExperience'
 
 export const Route = createFileRoute('/c/$slug/wall')({
@@ -31,11 +31,11 @@ function PhotoWall() {
   const photos = useQuery(api.photos.listForWall, { slug, guestToken })
 
   if (publicSettings === undefined || photos === undefined) {
-    return <LoadingScreen />
+    return <PhotoWallSkeleton />
   }
 
   if (publicSettings === null) {
-    return <LoadingScreen message="Photo wall unavailable" />
+    return <WallUnavailableScreen />
   }
 
   const joinUrl = guestToken

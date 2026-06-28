@@ -1,9 +1,13 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import { NotFoundScreen } from '@campfire/ui'
 
 export const Route = createFileRoute('/$')({
+  ssr: false,
   component: NotFound,
 })
 
 function NotFound() {
-  return <p>not found</p>
+  const navigate = useNavigate()
+
+  return <NotFoundScreen onHome={() => void navigate({ to: '/' })} />
 }

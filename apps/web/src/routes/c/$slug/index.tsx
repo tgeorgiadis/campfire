@@ -3,7 +3,7 @@ import { useConvexAuth, useQuery } from 'convex/react'
 import { useEffect } from 'react'
 import { api } from '@campfire/backend/convex/_generated/api'
 import { getGuestToken } from '@campfire/app-core'
-import { LoadingScreen } from '@campfire/ui'
+import { DigitalAlbumSkeleton } from '@campfire/ui'
 
 export const Route = createFileRoute('/c/$slug/')({
   ssr: false,
@@ -34,5 +34,5 @@ function CampfireRedirect() {
     void navigate({ to: '/c/$slug/album', params: { slug }, replace: true })
   }, [campfire, isLoading, navigate, slug])
 
-  return <LoadingScreen />
+  return <DigitalAlbumSkeleton />
 }
