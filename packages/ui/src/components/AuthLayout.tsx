@@ -24,7 +24,7 @@ export function AuthLayout({
       <View className="flex-1 items-center justify-center p-8">
         <View className="w-full max-w-[350px] gap-6">
           <View className="items-center gap-2 mb-2">
-            <CampfireLogo size="lg" />
+            <CampfireLogo size="lg" layout="stacked" />
             {subtitle ? (
               <Text className="text-sm text-ig-muted text-center">{subtitle}</Text>
             ) : null}
@@ -43,14 +43,7 @@ export function AuthLayout({
 function DefaultPromo() {
   return (
     <View className="gap-4 items-center px-12">
-      <View className="flex-row flex-wrap w-64 gap-1">
-        {Array.from({ length: 9 }).map((_, index) => (
-          <View
-            key={index}
-            className="w-[84px] h-[84px] bg-gradient-to-br from-cf-flame-yellow via-cf-flame-orange to-cf-flame-red rounded-sm opacity-80"
-          />
-        ))}
-      </View>
+      <CampfireLogo size="lg" layout="stacked" />
       <Text className="text-2xl font-light text-ig-text max-w-xs text-center">
         Gather. Share. Relive.
       </Text>

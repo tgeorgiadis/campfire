@@ -1,7 +1,9 @@
-import { Pressable, Text, View } from 'react-native'
+import type { ReactNode } from 'react'
+import { Text, View } from 'react-native'
 import { AppShell } from '../components/AppShell'
 import { CampfireLogo } from '../components/CampfireLogo'
 import { PrimaryButton, TextButton } from '../components/PrimaryButton'
+import { SelectablePill } from '../components/SelectablePill'
 import { TextField } from '../components/TextField'
 
 export function CreateCampfireScreen({
@@ -37,7 +39,7 @@ export function CreateCampfireScreen({
     return (
       <AppShell activeTab="create" onHome={onHome} onCreate={onCreate} onProfile={onProfile}>
         <View className="px-4 py-8 gap-6 max-w-[350px] w-full items-center">
-          <CampfireLogo size="md" />
+          <CampfireLogo size="md" layout="stacked" />
           <Text className="text-2xl font-semibold text-ig-text text-center">
             Campfire created
           </Text>
@@ -67,15 +69,17 @@ export function CreateCampfireScreen({
         <View className="gap-2">
           <Text className="text-xs text-ig-muted font-medium">Visibility</Text>
           <View className="flex-row gap-2">
-            <VisibilityPill
+            <SelectablePill
               label="Private"
               selected={visibility === 'private'}
               onPress={() => onVisibilityChange('private')}
+              className="flex-1 items-center"
             />
-            <VisibilityPill
+            <SelectablePill
               label="Public"
               selected={visibility === 'public'}
               onPress={() => onVisibilityChange('public')}
+              className="flex-1 items-center"
             />
           </View>
         </View>
@@ -86,30 +90,3 @@ export function CreateCampfireScreen({
     </AppShell>
   )
 }
-
-function VisibilityPill({
-  label,
-  selected,
-  onPress,
-}: {
-  label: string
-  selected: boolean
-  onPress: () => void
-}) {
-  return (
-    <Pressable
-      onPress={onPress}
-      className={`flex-1 py-2 rounded-lg border items-center ${
-        selected ? 'border-ig-text bg-ig-text' : 'border-ig-border bg-ig-surface'
-      }`}
-    >
-      <Text
-        className={`text-sm font-semibold ${selected ? 'text-white' : 'text-ig-text'}`}
-      >
-        {label}
-      </Text>
-    </Pressable>
-  )
-}
-
-import type { ReactNode } from 'react'

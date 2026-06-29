@@ -1,4 +1,5 @@
 import { TextInput, View, Text } from 'react-native'
+import { fieldFocus } from './motion/motionClasses'
 
 export function TextField({
   label,
@@ -22,7 +23,7 @@ export function TextField({
       {label ? (
         <Text className="text-xs text-ig-muted font-medium">{label}</Text>
       ) : null}
-      <View className="border border-ig-border rounded-lg bg-ig-surface px-3 py-2.5">
+      <View className={`border border-ig-border rounded-lg bg-ig-surface px-3 py-2.5 ${fieldFocus}`}>
         <TextInput
           value={value}
           onChangeText={onChangeText}

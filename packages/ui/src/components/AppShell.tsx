@@ -2,6 +2,7 @@ import type { ReactNode } from 'react'
 import { Pressable, ScrollView, Text, View } from 'react-native'
 import { SidebarNavItem } from './CampfireAvatar'
 import { CampfireLogo } from './CampfireLogo'
+import { focusRing, pressableBase, tabHover } from './motion/motionClasses'
 
 export type AppShellTab = 'home' | 'create' | 'profile'
 
@@ -79,8 +80,11 @@ function BottomTab({
   onPress: () => void
 }) {
   return (
-    <Pressable onPress={onPress} className="py-2 px-8">
-      <Text className={`text-2xl ${active ? 'opacity-100' : 'opacity-50'}`}>{icon}</Text>
+    <Pressable
+      onPress={onPress}
+      className={`py-2 px-8 rounded-lg ${pressableBase} ${focusRing} ${active ? '' : tabHover}`}
+    >
+      <Text className={`text-2xl transition-opacity duration-150 ${active ? 'opacity-100' : 'opacity-50 hover:opacity-80'}`}>{icon}</Text>
     </Pressable>
   )
 }

@@ -89,6 +89,9 @@ const campfireListItemValidator = v.object({
   role: v.union(v.literal('owner'), v.literal('member')),
   createdAt: v.number(),
   uploadCount: v.number(),
+  eventType: eventTypeValidator,
+  eventDate: v.optional(v.number()),
+  themeColor: v.string(),
 })
 
 export const create = mutation({
@@ -164,6 +167,7 @@ export const listMine = query({
             return null
           }
           const counts = await countPhotosByStatus(ctx, campfire._id)
+          const settings = resolveCampfireSettings(campfire)
           return {
             _id: campfire._id,
             name: campfire.name,
@@ -172,6 +176,9 @@ export const listMine = query({
             role: membership.role,
             createdAt: campfire.createdAt,
             uploadCount: counts.total,
+            eventType: settings.eventType,
+            eventDate: settings.eventDate,
+            themeColor: settings.themeColor,
           }
         }),
       )

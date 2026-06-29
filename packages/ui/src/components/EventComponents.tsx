@@ -1,5 +1,16 @@
 import type { ReactNode } from 'react'
 import { Pressable, Text, View } from 'react-native'
+import { ElevatedSurface } from './brand/ElevatedSurface'
+import {
+  focusRing,
+  linkHover,
+  pressableBase,
+  pressablePrimary,
+  tabHover,
+} from './motion/motionClasses'
+import { PrimaryButton } from './PrimaryButton'
+
+export { ToggleSwitch } from './ToggleSwitch'
 
 export function DashboardCard({
   title,
@@ -11,13 +22,13 @@ export function DashboardCard({
   children: ReactNode
 }) {
   return (
-    <View className="border border-cf-card-border rounded-xl bg-cf-card p-6 gap-4">
+    <ElevatedSurface className="border border-ig-border rounded-xl bg-ig-surface p-6 gap-4">
       <View className="gap-1">
         <Text className="text-xl font-semibold text-ig-text">{title}</Text>
         <Text className="text-sm text-ig-muted">{description}</Text>
       </View>
       {children}
-    </View>
+    </ElevatedSurface>
   )
 }
 
@@ -35,13 +46,16 @@ export function CopyField({
       <Text className="flex-1 text-sm text-ig-text truncate" numberOfLines={1}>
         {value}
       </Text>
-      <Pressable onPress={onCopy} className="px-2 py-1">
+      <Pressable
+        onPress={onCopy}
+        className={`px-2 py-1 rounded ${pressableBase} ${focusRing} ${linkHover}`}
+      >
         <Text className="text-sm text-cf-accent font-medium">Copy</Text>
       </Pressable>
       {onOpen ? (
         <Pressable
           onPress={onOpen}
-          className="bg-cf-accent rounded-lg px-3 py-1.5"
+          className={`bg-cf-accent rounded-lg px-3 py-1.5 ${pressableBase} ${focusRing} ${pressablePrimary}`}
         >
           <Text className="text-sm text-white font-medium">Open</Text>
         </Pressable>
@@ -65,12 +79,12 @@ export function SettingsTabBar({
         <Pressable
           key={tab.id}
           onPress={() => onChange(tab.id)}
-          className={`pb-3 border-b-2 ${
-            active === tab.id ? 'border-cf-accent' : 'border-transparent'
+          className={`pb-3 border-b-2 transition-colors duration-150 ${focusRing} ${
+            active === tab.id ? 'border-cf-accent' : `border-transparent ${tabHover}`
           }`}
         >
           <Text
-            className={`text-sm font-medium ${
+            className={`text-sm font-medium transition-colors duration-150 ${
               active === tab.id ? 'text-cf-accent' : 'text-ig-muted'
             }`}
           >
@@ -101,27 +115,6 @@ export function SettingsRow({
       </View>
       <View className="shrink-0">{control}</View>
     </View>
-  )
-}
-
-export function ToggleSwitch({
-  value,
-  onChange,
-}: {
-  value: boolean
-  onChange: (value: boolean) => void
-}) {
-  return (
-    <Pressable
-      onPress={() => onChange(!value)}
-      className={`w-11 h-6 rounded-full px-0.5 justify-center ${
-        value ? 'bg-cf-accent' : 'bg-ig-border'
-      }`}
-    >
-      <View
-        className={`w-5 h-5 rounded-full bg-white ${value ? 'self-end' : 'self-start'}`}
-      />
-    </Pressable>
   )
 }
 
@@ -174,12 +167,7 @@ export function WelcomeScreenModal({
       <View className="bg-ig-surface rounded-xl p-8 max-w-md w-full gap-4 items-center">
         <Text className="text-2xl font-bold text-ig-text text-center">{title}</Text>
         <Text className="text-sm text-ig-muted text-center">{message}</Text>
-        <Pressable
-          onPress={onContinue}
-          className="bg-cf-accent rounded-lg px-6 py-3 mt-2"
-        >
-          <Text className="text-white font-semibold">Continue</Text>
-        </Pressable>
+        <PrimaryButton label="Continue" onPress={onContinue} />
       </View>
     </View>
   )

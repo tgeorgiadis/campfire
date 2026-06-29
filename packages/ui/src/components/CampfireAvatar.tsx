@@ -1,4 +1,5 @@
 import { Pressable, Text, View } from 'react-native'
+import { focusRing, navItemHover, pressableBase } from './motion/motionClasses'
 
 export function CampfireAvatar({
   name,
@@ -34,7 +35,7 @@ export function NavIcon({
   onPress: () => void
 }) {
   return (
-    <Pressable onPress={onPress} className="items-center gap-1 py-2 px-4">
+    <Pressable onPress={onPress} className={`items-center gap-1 py-2 px-4 ${pressableBase} ${focusRing} hover:opacity-100 active:opacity-80`}>
       <Text className={`text-2xl ${active ? 'opacity-100' : 'opacity-60'}`}>
         {label}
       </Text>
@@ -62,8 +63,8 @@ export function SidebarNavItem({
       onPress={onPress}
       onHoverIn={onIntent}
       onFocus={onIntent}
-      className={`flex-row items-center gap-3 py-2.5 px-3 rounded-lg ${
-        active && accent ? 'bg-cf-accent-light' : ''
+      className={`flex-row items-center gap-3 py-2.5 px-3 rounded-lg ${pressableBase} ${focusRing} ${
+        active && accent ? 'bg-cf-accent-light' : active ? '' : navItemHover
       }`}
     >
       <Text className="text-lg">{icon}</Text>

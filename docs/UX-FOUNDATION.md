@@ -23,10 +23,12 @@ Use tokens as Tailwind classes on React Native `View` / `Text` (`className="bg-c
 |------|--------------|---------|
 | Brand accent | `cf-accent`, `cf-accent-light` | `bg-cf-accent`, `text-cf-accent` |
 | Flame palette | `cf-flame-*` | `bg-cf-flame-orange` |
-| Page background | `ig-page`, `cf-cream` | `bg-ig-page` |
-| Surfaces | `ig-surface`, `cf-card` | `bg-ig-surface` |
+| Page background | `ig-page`, `cf-cream`, `cf-page-*` | `bg-ig-page`, `bg-cf-page-neutral` |
+| Surfaces | `ig-surface`, `cf-surface-elevated` | `bg-ig-surface` |
+| Legacy card (avoid) | `cf-card` | Same hex as page — use elevated white instead |
 | Text | `ig-text`, `ig-muted` | `text-ig-text` |
 | Borders | `ig-border`, `cf-card-border` | `border-ig-border` |
+| Elevation | `CF_SHADOW_SM` via `ElevatedSurface` | Warm rgba shadow — not a Tailwind class |
 | Error | `ig-red` | `text-ig-red` (errors only) |
 
 See [`BRAND.md`](BRAND.md) for hex values and usage rules.
@@ -86,8 +88,33 @@ Logo wordmark sizes: `CampfireLogo` `sm` / `md` / `lg` in `CampfireLogo.tsx`.
 ### Grid patterns
 
 - Event cards: `flex-row flex-wrap gap-4`, `w-full sm:w-[calc(50%-0.5rem)] lg:w-[calc(33.333%-0.75rem)]`
+- Event card component: `CampfireEventCard` in `packages/ui/src/components/brand/` (storyboard + Phase 2 rollout)
 - Color swatches: `flex-row flex-wrap gap-3`
 - Event type pills: `flex-row flex-wrap gap-2`
+
+### CampfireEventCard (preview)
+
+Used on `/brand` for design exploration; replaces inline cards in My Events during Phase 2.
+
+| Style | Description |
+|-------|-------------|
+| `elevated` | White surface, warm shadow, optional theme stripe, inline current badge |
+| `warm-header` | Accent-light header band with emoji + title |
+| `legacy` | Current production — cream card on cream page (deprecated) |
+
+**Content order:** emoji + name → event date → upload count → created date.
+
+**Current event:** `rounded-full bg-cf-accent-light px-2.5 py-1` pill — never a full-width footer (keeps grid even).
+
+### Elevation
+
+Card shadow uses `ElevatedSurface` with `CF_SHADOW_SM` from `brandShadow.ts`:
+
+```ts
+'0 1px 3px rgba(46, 49, 56, 0.08), 0 1px 2px rgba(255, 94, 58, 0.06)'
+```
+
+Do not use `bg-gradient-*` for brand marks (SSR crash with react-native-web). Use `FlameMark` solid fills instead.
 
 ### Breakpoints
 
@@ -96,11 +123,47 @@ Logo wordmark sizes: `CampfireLogo` `sm` / `md` / `lg` in `CampfireLogo.tsx`.
 
 ---
 
+## Motion
+
+Shared motion tokens live in `packages/ui/src/global.css` and reusable class strings in `packages/ui/src/components/motion/motionClasses.ts`.
+
+### Durations and easing
+
+| Token | Value | Usage |
+|-------|-------|-------|
+| `--duration-fast` | `150ms` | Buttons, links, pills, grid tiles |
+| `--duration-normal` | `200ms` | Toggles, tabs, cards |
+| `--duration-slow` | `300ms` | Modals, overlays |
+| `--ease-out` | `cubic-bezier(0.33, 1, 0.68, 1)` | Default easing |
+
+Tailwind: `duration-150`, `duration-200`, `ease-out` on interactive elements.
+
+### Interaction states
+
+| State | Rule |
+|-------|------|
+| **Hover** (web) | Subtle opacity, background, or shadow shift — never jarring color jumps |
+| **Active / press** | `active:scale-[0.98]` on buttons; `active:scale-[0.99]` on large cards |
+| **Focus** | `focus-visible:outline-2 outline-cf-accent outline-offset-2` for keyboard users |
+| **Disabled** | `opacity-50`, no hover feedback |
+
+Use `PrimaryButton`, `TextButton`, `SelectablePill`, and `ToggleSwitch` as reference implementations.
+
+### Reduced motion
+
+A global `@media (prefers-reduced-motion: reduce)` rule shortens all transitions and animations to ~0ms. Do not bypass this with inline animation durations.
+
+### Toggle animation
+
+`ToggleSwitch` uses React Native `Animated.timing` (not Reanimated) for thumb slide and track color over 200ms — SSR-safe.
+
+---
+
 ## Component hierarchy
 
 1. **Layout** — `EventShell`, `AppShell`, `ModalFrame`
 2. **Content** — `DashboardCard`, `MediaGrid`, `PhotoWallScreen`
-3. **Interactive** — `PrimaryButton`, `TextField`, `ToggleSwitch`, `SettingsRow`
+3. **Interactive** — `PrimaryButton`, `TextField`, `ToggleSwitch`, `SelectablePill`, `SettingsRow`
 4. **Brand** — `CampfireLogo`
 5. **Tokens** — `className` only; no inline hex in feature code
 
@@ -148,8 +211,9 @@ EventShell
 1. Confirm tokens exist in `global.css` (add to `@theme` if new)
 2. Update `/brand` storyboard swatches if tokens change
 3. Build with `@campfire/ui` components and Uniwind classes
-4. Run brand checklist in [`BRAND.md`](BRAND.md)
-5. `bun run lint`
+4. Use `ElevatedSurface` for card elevation; prefer white cards on warm page
+5. Run brand checklist in [`BRAND.md`](BRAND.md)
+6. `bun run lint`
 
 ---
 
@@ -157,5 +221,6 @@ EventShell
 
 - **brand-guardian** — strategy, voice, terminology
 - **ux-architect** — this doc’s patterns and handoff templates
+- **ui-designer** — visual systems, logo lockups, card elevation, `/brand` exploration
 
 *Last updated: UX foundation v1.*

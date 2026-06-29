@@ -51,6 +51,9 @@ export type CampfireSummary = {
 
 export type CampfireListItem = CampfireSummary & {
   uploadCount: number
+  eventType: EventType
+  eventDate?: number
+  themeColor: string
 }
 
 export type CampfireDashboard = {

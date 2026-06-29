@@ -1,5 +1,6 @@
 import type { PhotoComment, PhotoItem } from '@campfire/app-core'
 import { Image, Modal, Pressable, ScrollView, Text, View } from 'react-native'
+import { focusRing, linkHover, pressableBase } from './motion/motionClasses'
 import { PrimaryButton } from './PrimaryButton'
 import { TextField } from './TextField'
 
@@ -80,7 +81,10 @@ export function PhotoLightbox({
                     <Text className="text-white/80 text-sm">{likeCount} likes</Text>
                   ) : null}
                   {onLike ? (
-                    <Pressable onPress={onLike}>
+                    <Pressable
+                      onPress={onLike}
+                      className={`rounded px-2 py-1 ${pressableBase} ${focusRing} ${linkHover}`}
+                    >
                       <Text className="text-cf-accent text-sm font-semibold">Like</Text>
                     </Pressable>
                   ) : null}
@@ -91,6 +95,7 @@ export function PhotoLightbox({
                           window.open(photo.url, '_blank')
                         }
                       }}
+                      className={`rounded px-2 py-1 ${pressableBase} ${focusRing} hover:opacity-80 active:opacity-70`}
                     >
                       <Text className="text-white text-sm underline">Download</Text>
                     </Pressable>
@@ -161,8 +166,11 @@ export function PhotoLightbox({
             </ScrollView>
           </Pressable>
         ) : null}
-        <Pressable onPress={onClose} className="absolute top-8 right-8">
-          <Text className="text-white text-3xl">×</Text>
+        <Pressable
+          onPress={onClose}
+          className={`absolute top-8 right-8 rounded-full px-3 py-1 ${pressableBase} ${focusRing} hover:bg-white/10 active:bg-white/20`}
+        >
+          <Text className="text-white text-3xl leading-none">×</Text>
         </Pressable>
       </Pressable>
     </Modal>

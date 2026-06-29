@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 import { Modal, Pressable, Text, View } from 'react-native'
+import { focusRing, pressableBase } from './motion/motionClasses'
 
 export function ModalFrame({
   visible,
@@ -24,8 +25,14 @@ export function ModalFrame({
         >
           <View className="flex-row items-center justify-between">
             <Text className="text-lg font-semibold text-ig-text">{title}</Text>
-            <Pressable onPress={onClose} hitSlop={8}>
-              <Text className="text-ig-muted text-2xl leading-none">×</Text>
+            <Pressable
+              onPress={onClose}
+              hitSlop={8}
+              className={`rounded ${pressableBase} ${focusRing} hover:bg-ig-page active:bg-cf-accent-light px-1`}
+            >
+              <Text className="text-ig-muted text-2xl leading-none hover:text-ig-text transition-colors duration-150">
+                ×
+              </Text>
             </Pressable>
           </View>
           {children}

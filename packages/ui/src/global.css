@@ -22,7 +22,25 @@
   --color-cf-accent-light: #fff0e6;
   --color-cf-card: #fff7ec;
   --color-cf-card-border: #ffd4b8;
+  /* Preview page backgrounds (storyboard — Phase 2 picks one for ig-page) */
+  --color-cf-page-current: #fff7ec;
+  --color-cf-page-neutral: #fafaf8;
+  --color-cf-page-deep: #f5ede3;
+  --color-cf-surface-elevated: #ffffff;
+  --duration-fast: 150ms;
+  --duration-normal: 200ms;
+  --duration-slow: 300ms;
+  --ease-out: cubic-bezier(0.33, 1, 0.68, 1);
   --font-sans:
     -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial,
     sans-serif;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
 }

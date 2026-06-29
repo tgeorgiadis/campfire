@@ -2,6 +2,14 @@ import type { PhotoItem, PhotoStatus } from '@campfire/app-core'
 import type { ReactNode } from 'react'
 import { useState } from 'react'
 import { Pressable, Text, View } from 'react-native'
+import { ElevatedSurface } from '../components/brand/ElevatedSurface'
+import {
+  focusRing,
+  pillSelected,
+  pillUnselected,
+  pressableBase,
+  tabHover,
+} from '../components/motion/motionClasses'
 import { EventShell, type EventNavTab } from '../components/EventShell'
 import { MediaGrid } from '../components/MediaGrid'
 import { PrimaryButton } from '../components/PrimaryButton'
@@ -52,7 +60,7 @@ export function EventPhotosContent({
 
   return (
     <View className="gap-6">
-      <View className="bg-cf-card border border-cf-card-border rounded-xl p-6 gap-4">
+      <ElevatedSurface className="border border-ig-border rounded-xl bg-ig-surface p-6 gap-4">
         <Text className="text-xl font-semibold text-ig-text">Your Photos & Videos</Text>
         <Text className="text-sm text-ig-muted">
           Find, upload, and view photos from everyone who came. Approved items appear on your
@@ -78,7 +86,7 @@ export function EventPhotosContent({
         <Text className="text-sm text-ig-muted">
           {dashboard.counts.total} uploads total
         </Text>
-      </View>
+      </ElevatedSurface>
 
       {textOpen ? (
         <View className="border border-ig-border rounded-lg p-4 gap-3 bg-ig-surface">
@@ -93,8 +101,10 @@ export function EventPhotosContent({
               <Pressable
                 key={bg}
                 onPress={() => setTextBg(bg)}
-                className={`px-2 py-1 rounded border ${
-                  textBg === bg ? 'border-cf-accent' : 'border-ig-border'
+                className={`px-2 py-1 rounded border ${pressableBase} ${focusRing} active:scale-95 ${
+                  textBg === bg
+                    ? pillSelected
+                    : `border-ig-border bg-ig-surface ${pillUnselected}`
                 }`}
               >
                 <Text className="text-xs text-ig-text">{bg}</Text>
@@ -117,12 +127,12 @@ export function EventPhotosContent({
           <Pressable
             key={t.id}
             onPress={() => onPhotoTabChange(t.id)}
-            className={`px-4 py-2 rounded-t-lg ${
-              photoTab === t.id ? 'border-b-2 border-cf-accent' : ''
+            className={`px-4 py-2 rounded-t-lg transition-colors duration-150 ${focusRing} ${
+              photoTab === t.id ? 'border-b-2 border-cf-accent' : tabHover
             }`}
           >
             <Text
-              className={`text-sm font-medium ${
+              className={`text-sm font-medium transition-colors duration-150 ${
                 photoTab === t.id ? 'text-cf-accent' : 'text-ig-muted'
               }`}
             >

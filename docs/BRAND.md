@@ -84,9 +84,11 @@ Tokens are defined in `packages/ui/src/global.css` and exposed as Tailwind class
 | Flame highlight | `cf-flame-yellow` | `#FFC24D` | Warm accents, celebratory moments |
 | Flame red (alias) | `cf-flame-red` | `#FF5E3A` | Same as accent; use for flame imagery |
 | Page / warmth | `cf-cream` / `ig-page` | `#FFF7EC` | App background — firelight on faces |
-| Card surface | `cf-card` | `#FFF7EC` | Dashboard cards on cream pages |
+| Page preview — neutral | `cf-page-neutral` | `#FAFAF8` | Storyboard option: softer warm white |
+| Page preview — deep | `cf-page-deep` | `#F5EDE3` | Storyboard option: richer cream |
+| Card surface (legacy) | `cf-card` | `#FFF7EC` | **Deprecated for cards** — same hex as page; use elevated white |
+| Elevated surface | `cf-surface-elevated` / `ig-surface` | `#FFFFFF` | Cards, modals, sidebar — white on warm page |
 | Card border | `cf-card-border` | `#FFD4B8` | Warm card outlines |
-| Surface | `ig-surface` | `#FFFFFF` | Cards, modals, sidebar |
 | Text primary | `ig-text` / `cf-charcoal` | `#2E3138` | Headlines, body |
 | Text muted | `ig-muted` / `cf-gray` | `#49505A` | Secondary copy |
 | Border | `ig-border` | `#E8DFD4` | Dividers — warm gray, not cool gray |
@@ -116,18 +118,77 @@ Tokens are defined in `packages/ui/src/global.css` and exposed as Tailwind class
 --color-cf-accent-light: #fff0e6;
 --color-cf-card: #fff7ec;
 --color-cf-card-border: #ffd4b8;
+--color-cf-page-current: #fff7ec;
+--color-cf-page-neutral: #fafaf8;
+--color-cf-page-deep: #f5ede3;
+--color-cf-surface-elevated: #ffffff;
 ```
 
 Default event theme color in the backend: `#FF5E3A` (`packages/backend/convex/lib/defaults.ts`).
 
-### Logo
+### Surface hierarchy
 
-- **Primary:** Wordmark **Campfire** — bold, tight tracking (`packages/ui/src/components/CampfireLogo.tsx`)
+Today’s production UI uses `cf-card` and `ig-page` at the **same hex** (`#FFF7EC`), so cards read flat. The intended hierarchy:
+
+```
+Warm page (cf-page-*) → Elevated white surface (ig-surface) → Accent stripe / badge
+```
+
+| Layer | Token | Usage |
+|-------|-------|-------|
+| Page | `ig-page` / `cf-page-current` | App background, shell content area |
+| Chrome | `ig-surface` | Sidebar, headers, modals |
+| Elevated card | `ig-surface` + warm shadow | Event cards, dashboard cards |
+| Accent | `cf-accent`, `cf-accent-light` | CTAs, current-event badge, nav active |
+
+Shadow is applied via `ElevatedSurface` (`CF_SHADOW_SM` in `packages/ui/src/components/brand/brandShadow.ts`) — not a Tailwind class (RN-web safe).
+
+**Motion:** Interactions should feel warm and fluid — gentle hover lifts, smooth toggle slides, and press feedback — not stiff enterprise SaaS. See `docs/UX-FOUNDATION.md` (Motion section) for durations and reduced-motion rules.
+
+### Background strategy options
+
+Review all three on `/brand` before Phase 2 rollout:
+
+| Strategy | Token | Hex | Notes |
+|----------|-------|-----|-------|
+| Warm cream + white cards | `cf-page-current` | `#FFF7EC` | **Recommended default** — keeps brand warmth; cards lift to white |
+| Neutral page + white cards | `cf-page-neutral` | `#FAFAF8` | More contrast; slightly less “firelight” |
+| Deep cream + white cards | `cf-page-deep` | `#F5EDE3` | Richest page tone; strongest card separation |
+
+**Selection workflow:** Open `/brand` → pick background + logo lockup → Phase 2 updates `ig-page` and card components app-wide.
+
+### Logo system
+
+Production UI still uses wordmark-only until a lockup is chosen on `/brand`.
+
+| Lockup | Variant | Best for |
+|--------|---------|----------|
+| A | Wordmark only | Default nav, auth (current production) |
+| B | Flame mark + horizontal wordmark | Sidebar, album header |
+| C | Stacked: mark above wordmark | Marketing hero, startup wizard |
+| D | Circle badge + wordmark | App icon preview, compact contexts |
+
+**Components:** `FlameMark`, `CampfireLogoLockup` in `packages/ui/src/components/brand/`.
+
+- **Canonical mark:** `FlameMark` — solid fills only; SSR-safe, no gradients
+- **Legacy (migrate in Phase 2):** 3×3 tile grids in auth promo (gradient) and marketing (flat orange)
 - **Default theme:** Dark text on cream
 - **Dark theme:** White text on dark backgrounds (photo wall, fullscreen)
-- **Clear space:** Height of capital "C" on all sides
-- **Minimum size:** 80px wide wordmark on web
-- **Future (optional):** Flame icon mark for favicon/PWA — simple single-flame silhouette using accent gradient
+- **Clear space:** Height of the flame mark on all sides
+- **Minimum size:** 80px wide wordmark on web; flame mark ≥ 20px
+- **Favicon / PWA:** Use lockup D circle badge or flame mark alone once selected
+
+**Production wordmark:** `CampfireLogo` with `CampfireMark` — flame rising from shared photo tiles and memory sparks (`packages/ui/src/components/brand/CampfireMark.tsx`). Default layout: horizontal in shell, stacked on auth/marketing hero.
+
+### Card design language
+
+Event and dashboard cards should use **elevated white surfaces**, not cream-on-cream:
+
+- **Surface:** `bg-ig-surface`, `border-ig-border`, `ElevatedSurface` shadow
+- **Theme stripe:** Optional 3px top bar using per-campfire `themeColor`
+- **Content hierarchy:** Event type emoji + name → event date → upload count → created date
+- **Current event:** Inline pill (`bg-cf-accent-light text-cf-accent`) — not a full-width footer bar
+- **Preview component:** `CampfireEventCard` with styles `elevated` | `warm-header` | `legacy`
 
 ### Typography
 
@@ -138,7 +199,7 @@ Default event theme color in the backend: `#FF5E3A` (`packages/backend/convex/li
 ### Imagery and UI mood
 
 - Photos are the hero — UI stays warm and minimal
-- Rounded corners (`rounded-xl`), soft borders, cream not stark white pages
+- Rounded corners (`rounded-xl`), soft borders, warm page with white elevated cards
 - Photo wall: black letterbox + sharp contain — content first; UI chrome disappears
 
 ---
@@ -249,7 +310,7 @@ Use these as templates when writing or revising UI strings.
 
 Before shipping a new screen or flow, confirm:
 
-1. **Colors** — Uses cream page background, `cf-accent` for primary actions, warm borders (no cool grays or Instagram blue)
+1. **Colors** — Warm page background + white elevated cards; `cf-accent` for primary actions; warm borders (no cool grays or Instagram blue)
 2. **Voice** — Copy is warm, inclusive, and short; no enterprise jargon
 3. **Terminology** — "Campfire" / "campfire" / "album" / "photo wall" used consistently per the table above
 4. **Photos first** — UI chrome stays minimal; user content is the hero

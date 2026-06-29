@@ -17,7 +17,12 @@ import {
 import { EventShell, type EventNavTab } from '../components/EventShell'
 import { PrimaryButton, TextButton } from '../components/PrimaryButton'
 import { TextField } from '../components/TextField'
+import { SelectablePill } from '../components/SelectablePill'
 import { EVENT_TYPE_OPTIONS } from '../lib/eventTypes'
+import {
+  focusRing,
+  pressableBase,
+} from '../components/motion/motionClasses'
 import { SkeletonBlock } from '../components/skeletons/SkeletonBlock'
 
 const SETTINGS_TABS = [
@@ -133,19 +138,13 @@ export function EventSettingsContent({
           />
           <View className="flex-row flex-wrap gap-2">
             {EVENT_TYPE_OPTIONS.map((type) => (
-              <Pressable
+              <SelectablePill
                 key={type.id}
+                label={type.label}
+                emoji={type.emoji}
+                selected={generalForm.eventType === type.id}
                 onPress={() => onGeneralFormChange({ eventType: type.id })}
-                className={`px-3 py-2 rounded-lg border ${
-                  generalForm.eventType === type.id
-                    ? 'border-cf-accent bg-cf-accent-light'
-                    : 'border-ig-border'
-                }`}
-              >
-                <Text className="text-sm text-ig-text">
-                  {type.emoji} {type.label}
-                </Text>
-              </Pressable>
+              />
             ))}
           </View>
           <Text className="text-sm font-semibold text-ig-text">Event link</Text>
@@ -433,17 +432,13 @@ export function EventSettingsContent({
                     ['upload_only', 'Upload Only'],
                   ] as const
                 ).map(([perm, label]) => (
-                  <Pressable
+                  <SelectablePill
                     key={perm}
+                    label={label}
+                    selected={moderationForm.albumPermission === perm}
                     onPress={() => onModerationFormChange({ albumPermission: perm })}
-                    className={`p-3 rounded-lg border ${
-                      moderationForm.albumPermission === perm
-                        ? 'border-cf-accent bg-cf-accent-light'
-                        : 'border-ig-border'
-                    }`}
-                  >
-                    <Text className="text-sm font-medium text-ig-text">{label}</Text>
-                  </Pressable>
+                    className="w-full"
+                  />
                 ))}
               </View>
             }
@@ -689,7 +684,10 @@ function CheckRow({
   onChange: (value: boolean) => void
 }) {
   return (
-    <Pressable onPress={() => onChange(!checked)} className="flex-row items-center gap-2">
+    <Pressable
+      onPress={() => onChange(!checked)}
+      className={`flex-row items-center gap-2 rounded ${pressableBase} ${focusRing} hover:bg-cf-accent-light/30 active:bg-cf-accent-light/50 px-1 py-0.5`}
+    >
       <View
         className={`w-4 h-4 rounded border ${
           checked ? 'bg-cf-accent border-cf-accent' : 'border-ig-border'

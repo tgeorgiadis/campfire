@@ -1,4 +1,5 @@
-import { Pressable, Text, View } from 'react-native'
+import { Text, View } from 'react-native'
+import { SelectablePill } from '../components/SelectablePill'
 import { CampfireLogo } from '../components/CampfireLogo'
 import { PrimaryButton } from '../components/PrimaryButton'
 import { TextField } from '../components/TextField'
@@ -24,7 +25,7 @@ export function StartupWizardScreen({
     <View className="min-h-screen bg-ig-page items-start p-6 pt-12">
       <View className="w-full max-w-[420px] gap-6 border border-ig-border bg-ig-surface rounded-xl p-8">
         <View className="items-center gap-3">
-          <CampfireLogo size="lg" />
+          <CampfireLogo size="lg" layout="stacked" />
           <Text className="text-2xl font-semibold text-ig-text text-center">
             Create your first campfire
           </Text>
@@ -43,15 +44,17 @@ export function StartupWizardScreen({
         <View className="gap-2">
           <Text className="text-xs text-ig-muted font-medium">Visibility</Text>
           <View className="flex-row gap-2">
-            <VisibilityPill
+            <SelectablePill
               label="Private"
               selected={visibility === 'private'}
               onPress={() => onVisibilityChange('private')}
+              className="flex-1 items-center"
             />
-            <VisibilityPill
+            <SelectablePill
               label="Public"
               selected={visibility === 'public'}
               onPress={() => onVisibilityChange('public')}
+              className="flex-1 items-center"
             />
           </View>
         </View>
@@ -64,30 +67,5 @@ export function StartupWizardScreen({
         />
       </View>
     </View>
-  )
-}
-
-function VisibilityPill({
-  label,
-  selected,
-  onPress,
-}: {
-  label: string
-  selected: boolean
-  onPress: () => void
-}) {
-  return (
-    <Pressable
-      onPress={onPress}
-      className={`flex-1 py-2 rounded-lg border items-center ${
-        selected ? 'border-ig-text bg-ig-text' : 'border-ig-border bg-ig-surface'
-      }`}
-    >
-      <Text
-        className={`text-sm font-semibold ${selected ? 'text-white' : 'text-ig-text'}`}
-      >
-        {label}
-      </Text>
-    </Pressable>
   )
 }

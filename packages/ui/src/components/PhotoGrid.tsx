@@ -1,5 +1,6 @@
 import type { PhotoItem } from '@campfire/app-core'
 import { Image, Pressable, Text, View } from 'react-native'
+import { tileInteractive, focusRing } from './motion/motionClasses'
 
 export function PhotoGrid({
   photos,
@@ -26,7 +27,7 @@ export function PhotoGrid({
         <Pressable
           key={photo._id}
           onPress={() => onPhotoPress(photo)}
-          className="w-1/3 sm:w-1/4 md:w-1/5 lg:w-1/6 p-[0.5px] bg-ig-border"
+          className={`w-1/3 sm:w-1/4 md:w-1/5 lg:w-1/6 p-[0.5px] bg-ig-border ${tileInteractive} ${focusRing}`}
         >
           <View className="w-full aspect-square bg-ig-surface">
             {photo.url ? (

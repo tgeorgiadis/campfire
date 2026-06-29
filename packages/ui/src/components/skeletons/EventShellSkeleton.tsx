@@ -108,7 +108,17 @@ export function EventListContentSkeleton() {
       <SkeletonBlock className="h-10 w-48" />
       <View className="flex-row flex-wrap gap-4">
         {Array.from({ length: 3 }).map((_, i) => (
-          <SkeletonBlock key={i} className="h-36 w-full sm:w-[calc(50%-0.5rem)] lg:w-[calc(33.333%-0.75rem)]" />
+          <View
+            key={i}
+            className="w-full sm:w-[calc(50%-0.5rem)] lg:w-[calc(33.333%-0.75rem)] border border-ig-border rounded-xl bg-ig-surface overflow-hidden"
+          >
+            <SkeletonBlock className="h-12 w-full rounded-none bg-cf-accent-light" />
+            <View className="p-4 gap-2">
+              <SkeletonBlock className="h-4 w-32" />
+              <SkeletonBlock className="h-3 w-24" />
+              <SkeletonBlock className="h-3 w-20" />
+            </View>
+          </View>
         ))}
       </View>
     </View>

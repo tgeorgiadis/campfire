@@ -1,7 +1,17 @@
 import type { ReactNode } from 'react'
 import { useState } from 'react'
-import { Pressable, ScrollView, Text, View } from 'react-native'
+import { ScrollView, Text, View } from 'react-native'
+import { BackgroundStrategyComparison } from '../components/brand/BackgroundStrategyPreview'
+import {
+  CampfireEventCard,
+  STORYBOARD_EVENT_CARDS,
+} from '../components/brand/CampfireEventCard'
+import { CampfireLogoLockupGrid } from '../components/brand/CampfireLogoLockup'
+import { ElevatedSurface } from '../components/brand/ElevatedSurface'
+import { CampfireMark } from '../components/brand/CampfireMark'
+import { LegacyFlameGrid } from '../components/brand/LegacyFlameGrid'
 import { CampfireLogo } from '../components/CampfireLogo'
+import { SelectablePill } from '../components/SelectablePill'
 import { SettingsRow, ToggleSwitch } from '../components/EventComponents'
 import { PrimaryButton, TextButton } from '../components/PrimaryButton'
 import { TextField } from '../components/TextField'
@@ -19,8 +29,12 @@ const COLOR_SWATCHES: Array<{
   { token: 'cf-flame-orange', bgClass: 'bg-cf-flame-orange', hex: '#FF8A3D', label: 'Flame mid' },
   { token: 'cf-flame-yellow', bgClass: 'bg-cf-flame-yellow', hex: '#FFC24D', label: 'Flame highlight', darkText: true },
   { token: 'cf-flame-red', bgClass: 'bg-cf-flame-red', hex: '#FF5E3A', label: 'Flame red' },
-  { token: 'cf-cream', bgClass: 'bg-cf-cream', hex: '#FFF7EC', label: 'Cream / page', darkText: true },
-  { token: 'cf-card', bgClass: 'bg-cf-card', hex: '#FFF7EC', label: 'Card surface', darkText: true },
+  { token: 'cf-cream', bgClass: 'bg-cf-cream', hex: '#FFF7EC', label: 'Cream (legacy)', darkText: true },
+  { token: 'cf-page-current', bgClass: 'bg-cf-page-current', hex: '#FFF7EC', label: 'Page — warm cream', darkText: true },
+  { token: 'cf-page-neutral', bgClass: 'bg-cf-page-neutral', hex: '#FAFAF8', label: 'Page — neutral', darkText: true },
+  { token: 'cf-page-deep', bgClass: 'bg-cf-page-deep', hex: '#F5EDE3', label: 'Page — deep cream', darkText: true },
+  { token: 'cf-card', bgClass: 'bg-cf-card', hex: '#FFF7EC', label: 'Card (legacy)', darkText: true },
+  { token: 'cf-surface-elevated', bgClass: 'bg-cf-surface-elevated', hex: '#FFFFFF', label: 'Elevated surface', darkText: true },
   { token: 'cf-card-border', bgClass: 'bg-cf-card-border', hex: '#FFD4B8', label: 'Card border', darkText: true },
   { token: 'ig-surface', bgClass: 'bg-ig-surface', hex: '#FFFFFF', label: 'Surface', darkText: true },
   { token: 'ig-text', bgClass: 'bg-ig-text', hex: '#2E3138', label: 'Text primary' },
@@ -77,7 +91,8 @@ const BRAND_PILLARS = [
 ] as const
 
 const BRAND_CHECKLIST = [
-  'Uses cream page background, cf-accent for primary actions, warm borders',
+  'Page → elevated white cards with warm shadow (not cream-on-cream)',
+  'cf-accent for primary actions; warm borders — no cool grays or Instagram blue',
   'Copy is warm, inclusive, and short — no enterprise jargon',
   'Terminology: Campfire / campfire / album / photo wall used consistently',
   'Photos first — UI chrome stays minimal',
@@ -102,16 +117,133 @@ export function BrandStoryboardScreen() {
             To turn fleeting moments at gatherings into a shared story everyone helped tell —
             so memories feel collective, not solitary.
           </Text>
+          <Text className="text-xs text-ig-muted max-w-xl mt-2">
+            Phase 1 exploration — pick a background strategy and logo lockup here, then Phase 2
+            rolls out across the app.
+          </Text>
         </View>
 
-        <Section title="Logo">
+        <Section title="Background strategies">
+          <Text className="text-sm text-ig-muted">
+            Three page-background options with white elevated cards. Recommended default: warm cream
+            page + white cards — fixes today&apos;s cream-on-cream contrast issue.
+          </Text>
+          <BackgroundStrategyComparison />
+        </Section>
+
+        <Section title="Campfire mark">
+          <Text className="text-sm text-ig-muted">
+            Production logo: flame rising from shared photo tiles and memory sparks. Solid SVG
+            fills — SSR-safe.
+          </Text>
+          <View className="flex-row flex-wrap gap-8 items-center">
+            <View className="gap-2 items-center">
+              <CampfireLogo size="sm" layout="horizontal" />
+              <CampfireLogo size="md" layout="horizontal" />
+              <CampfireLogo size="lg" layout="stacked" />
+              <Text className="text-xs text-ig-muted">Sidebar / auth / hero</Text>
+            </View>
+          </View>
+        </Section>
+
+        <Section title="Logo lockups">
+          <Text className="text-sm text-ig-muted">
+            Four concepts for selection. Production UI still uses wordmark-only until you pick a
+            winner. Clear space: height of the flame mark on all sides. Minimum width: 80px
+            wordmark on web.
+          </Text>
+          <CampfireLogoLockupGrid size="md" />
+          <View className="mt-4 rounded-xl bg-cf-charcoal p-6 gap-4">
+            <Text className="text-xs text-white/70">Dark theme (photo wall, fullscreen)</Text>
+            <CampfireLogoLockupGrid theme="dark" size="md" />
+          </View>
+          <View className="flex-row flex-wrap gap-8 items-end mt-4">
+            <LogoSample label="sm (production wordmark)" size="sm" />
+            <LogoSample label="md" size="md" />
+            <LogoSample label="lg" size="lg" />
+          </View>
+        </Section>
+
+        <Section title="Event cards">
+          <Text className="text-sm text-ig-muted">
+            Current My Events cards vs proposed designs. Selected for rollout: warm header band.
+          </Text>
+          <View className="gap-6">
+            <View className="gap-3">
+              <Text className="text-sm font-semibold text-cf-accent">
+                Selected — warm header band
+              </Text>
+              <View className="flex-row flex-wrap gap-4">
+                {STORYBOARD_EVENT_CARDS.map((event) => (
+                  <CampfireEventCard key={event.name} event={event} style="warm-header" />
+                ))}
+              </View>
+            </View>
+            <View className="gap-3">
+              <Text className="text-sm font-semibold text-ig-muted">Previous — cream on cream</Text>
+              <View className="flex-row flex-wrap gap-4">
+                {STORYBOARD_EVENT_CARDS.map((event) => (
+                  <CampfireEventCard key={event.name} event={event} style="legacy" />
+                ))}
+              </View>
+            </View>
+            <View className="gap-3">
+              <Text className="text-sm font-semibold text-ig-muted">
+                Alternative — elevated white + theme stripe
+              </Text>
+              <View className="flex-row flex-wrap gap-4">
+                {STORYBOARD_EVENT_CARDS.map((event) => (
+                  <CampfireEventCard key={event.name} event={event} style="elevated" />
+                ))}
+              </View>
+            </View>
+          </View>
+        </Section>
+
+        <Section title="Surface and elevation">
+          <Text className="text-sm text-ig-muted mb-2">
+            Intended hierarchy: warm page → white elevated surface → accent stripe or badge.
+            Shadow via ElevatedSurface (warm rgba, RN-web safe).
+          </Text>
+          <View className="flex-row flex-wrap gap-4">
+            <SurfaceSample pageClass="bg-cf-page-current" label="Page — warm cream" />
+            <SurfaceSample pageClass="bg-cf-page-neutral" label="Page — neutral" />
+            <SurfaceSample pageClass="bg-cf-page-deep" label="Page — deep cream" />
+            <SurfaceSample pageClass="bg-ig-surface" label="Sidebar / chrome" bordered />
+            <SurfaceSample pageClass="bg-cf-surface-elevated" label="Elevated card" elevated bordered />
+          </View>
+        </Section>
+
+        <Section title="Flame mark (legacy comparison)">
+          <Text className="text-sm text-ig-muted">
+            Replaced tile grids in auth, marketing, and skeletons with CampfireMark.
+          </Text>
+          <View className="flex-row flex-wrap gap-8 items-center">
+            <View className="gap-2 items-center">
+              <CampfireMark size="sm" />
+              <CampfireMark size="md" />
+              <CampfireMark size="lg" />
+              <Text className="text-xs text-ig-muted">CampfireMark (production)</Text>
+            </View>
+            <View className="gap-2 items-center">
+              <LegacyFlameGrid variant="gradient" />
+              <Text className="text-xs text-ig-muted">Legacy — auth (gradient tiles)</Text>
+            </View>
+            <View className="gap-2 items-center">
+              <LegacyFlameGrid variant="flat" />
+              <Text className="text-xs text-ig-muted">Legacy — marketing (flat tiles)</Text>
+            </View>
+          </View>
+        </Section>
+
+        <Section title="Logo (production wordmark)">
           <View className="flex-row flex-wrap gap-8 items-end">
             <LogoSample label="sm" size="sm" />
             <LogoSample label="md" size="md" />
             <LogoSample label="lg" size="lg" />
           </View>
           <View className="mt-6 rounded-xl bg-cf-charcoal p-6 gap-2">
-            <Text className="text-xs text-ig-muted">Dark theme (photo wall)</Text>
+            <Text className="text-xs text-white/70">Dark theme (photo wall)</Text>
             <CampfireLogo size="md" theme="dark" />
           </View>
         </Section>
@@ -135,6 +267,36 @@ export function BrandStoryboardScreen() {
                 <Text className="text-xs text-ig-muted font-mono">{sample.label}</Text>
               </View>
             ))}
+          </View>
+        </Section>
+
+        <Section title="Motion and interaction">
+          <Text className="text-sm text-ig-muted mb-2">
+            Hover, press, and focus feedback on web. Toggle animates over 200ms. Respects
+            prefers-reduced-motion.
+          </Text>
+          <View className="gap-6 border border-ig-border rounded-xl bg-ig-surface p-6">
+            <View className="flex-row flex-wrap gap-4 items-center">
+              <PrimaryButton label="Primary — hover me" onPress={() => {}} />
+              <PrimaryButton label="Secondary" variant="secondary" onPress={() => {}} />
+              <TextButton label="Text link" onPress={() => {}} />
+            </View>
+            <SettingsRow
+              title="Animated toggle"
+              description="Track color and thumb slide smoothly."
+              control={<ToggleSwitch value={toggleOn} onChange={setToggleOn} />}
+            />
+            <View className="flex-row flex-wrap gap-2">
+              {EVENT_TYPE_OPTIONS.slice(0, 3).map((type) => (
+                <SelectablePill
+                  key={type.id}
+                  label={type.label}
+                  emoji={type.emoji}
+                  selected={selectedType === type.id}
+                  onPress={() => setSelectedType(type.id)}
+                />
+              ))}
+            </View>
           </View>
         </Section>
 
@@ -166,19 +328,13 @@ export function BrandStoryboardScreen() {
         <Section title="Event type pills">
           <View className="flex-row flex-wrap gap-2">
             {EVENT_TYPE_OPTIONS.map((type) => (
-              <Pressable
+              <SelectablePill
                 key={type.id}
+                label={type.label}
+                emoji={type.emoji}
+                selected={selectedType === type.id}
                 onPress={() => setSelectedType(type.id)}
-                className={`px-3 py-2 rounded-lg border ${
-                  selectedType === type.id
-                    ? 'border-cf-accent bg-cf-accent-light'
-                    : 'border-ig-border bg-ig-surface'
-                }`}
-              >
-                <Text className="text-sm text-ig-text">
-                  {type.emoji} {type.label}
-                </Text>
-              </Pressable>
+              />
             ))}
           </View>
         </Section>
@@ -305,5 +461,33 @@ function ColorSwatch({
       <Text className="text-xs text-ig-muted font-mono">{token}</Text>
       <Text className="text-xs text-ig-muted">{hex}</Text>
     </View>
+  )
+}
+
+function SurfaceSample({
+  pageClass,
+  label,
+  elevated,
+  bordered,
+}: {
+  pageClass: string
+  label: string
+  elevated?: boolean
+  bordered?: boolean
+}) {
+  const inner = (
+    <View
+      className={`h-20 w-36 rounded-lg items-center justify-center ${pageClass} ${
+        bordered ? 'border border-ig-border' : ''
+      }`}
+    >
+      <Text className="text-xs text-ig-muted text-center px-2">{label}</Text>
+    </View>
+  )
+
+  return elevated ? (
+    <ElevatedSurface className="rounded-lg">{inner}</ElevatedSurface>
+  ) : (
+    inner
   )
 }

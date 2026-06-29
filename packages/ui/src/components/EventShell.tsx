@@ -3,6 +3,7 @@ import { Pressable, Text, View } from 'react-native'
 import type { CampfireSummary } from '@campfire/app-core'
 import { SidebarNavItem } from './CampfireAvatar'
 import { CampfireLogo } from './CampfireLogo'
+import { focusRing, linkHover, pressableBase, tabHover } from './motion/motionClasses'
 
 export type EventNavTab = 'home' | 'photos' | 'settings' | 'events'
 
@@ -38,7 +39,10 @@ export function EventShell({
 
   const createCampfireLink =
     onCreateCampfire != null ? (
-      <Pressable onPress={onCreateCampfire} className="mt-2 px-1">
+      <Pressable
+        onPress={onCreateCampfire}
+        className={`mt-2 px-1 rounded ${pressableBase} ${focusRing} ${linkHover}`}
+      >
         <Text className="text-sm font-semibold text-cf-accent">+ Create new campfire</Text>
       </Pressable>
     ) : null
@@ -50,7 +54,10 @@ export function EventShell({
           Current Event
         </Text>
         {onViewAllEvents != null ? (
-          <Pressable onPress={onViewAllEvents}>
+          <Pressable
+            onPress={onViewAllEvents}
+            className={`rounded ${pressableBase} ${focusRing} ${linkHover}`}
+          >
             <Text
               className={`text-xs font-semibold ${
                 activeTab === 'events' ? 'text-cf-accent' : 'text-cf-accent'
@@ -112,7 +119,10 @@ export function EventShell({
             {userEmail ? (
               <Text className="text-xs text-ig-text truncate">{userEmail}</Text>
             ) : null}
-            <Pressable onPress={onSignOut} className="mt-2">
+            <Pressable
+              onPress={onSignOut}
+              className={`mt-2 rounded ${pressableBase} ${focusRing} ${linkHover}`}
+            >
               <Text className="text-xs text-cf-accent">Sign out</Text>
             </Pressable>
           </View>
@@ -169,10 +179,10 @@ function MobileTab({
       onPress={onPress}
       onHoverIn={onIntent}
       onFocus={onIntent}
-      className="py-2 px-4"
+      className={`py-2 px-4 rounded-lg ${pressableBase} ${focusRing} ${active ? '' : tabHover}`}
     >
       <Text
-        className={`text-xs font-medium ${active ? 'text-cf-accent' : 'text-ig-muted'}`}
+        className={`text-xs font-medium transition-colors duration-150 ${active ? 'text-cf-accent' : 'text-ig-muted'}`}
       >
         {label}
       </Text>

@@ -1,11 +1,36 @@
+export {
+  BackgroundStrategyComparison,
+  BackgroundStrategyPreview,
+  BACKGROUND_STRATEGIES,
+  type BackgroundStrategy,
+} from './components/brand/BackgroundStrategyPreview'
+export {
+  CampfireEventCard,
+  STORYBOARD_EVENT_CARDS,
+  toEventCardData,
+  type CampfireEventCardData,
+  type CampfireEventCardStyle,
+} from './components/brand/CampfireEventCard'
+export {
+  CampfireLogoLockup,
+  CampfireLogoLockupGrid,
+  type CampfireLogoLockupVariant,
+} from './components/brand/CampfireLogoLockup'
+export { ElevatedSurface } from './components/brand/ElevatedSurface'
+export { FlameMark, type FlameMarkSize } from './components/brand/FlameMark'
+export { LegacyFlameGrid } from './components/brand/LegacyFlameGrid'
+export { SelectablePill } from './components/SelectablePill'
+export { ToggleSwitch } from './components/ToggleSwitch'
 export { AppShell, type AppShellTab } from './components/AppShell'
 export { AuthLayout, AccessDeniedScreen, LoadingScreen } from './components/AuthLayout'
 export { CampfireAvatar, SidebarNavItem } from './components/CampfireAvatar'
 export {
   CampfireLogo,
+  type CampfireLogoLayout,
   type CampfireLogoSize,
   type CampfireLogoTheme,
 } from './components/CampfireLogo'
+export { CampfireMark, type CampfireMarkSize } from './components/brand/CampfireMark'
 export {
   CopyField,
   DashboardCard,
@@ -13,7 +38,6 @@ export {
   PhoneMockup,
   SettingsRow,
   SettingsTabBar,
-  ToggleSwitch,
   WelcomeScreenModal,
 } from './components/EventComponents'
 export {

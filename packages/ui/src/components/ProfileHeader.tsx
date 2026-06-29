@@ -1,5 +1,11 @@
 import { Pressable, Text, View } from 'react-native'
 import { CampfireAvatar } from './CampfireAvatar'
+import {
+  focusRing,
+  linkHover,
+  pressableBase,
+  pressableSecondary,
+} from './motion/motionClasses'
 import { PrimaryButton } from './PrimaryButton'
 
 export function ProfileHeader({
@@ -39,14 +45,14 @@ export function ProfileHeader({
             {isOwner ? (
               <Pressable
                 onPress={onSettings}
-                className="border border-ig-border rounded-lg px-3 py-1"
+                className={`border border-ig-border rounded-lg px-3 py-1 ${pressableBase} ${focusRing} ${pressableSecondary}`}
               >
                 <Text className="text-xs font-semibold text-ig-text">Settings</Text>
               </Pressable>
             ) : null}
             <Pressable
               onPress={onShare}
-              className="border border-ig-border rounded-lg px-3 py-1"
+              className={`border border-ig-border rounded-lg px-3 py-1 ${pressableBase} ${focusRing} ${pressableSecondary}`}
             >
               <Text className="text-xs font-semibold text-ig-text">Share</Text>
             </Pressable>
@@ -73,7 +79,10 @@ export function ProfileHeader({
 
 function TextButtonLink({ label, onPress }: { label: string; onPress: () => void }) {
   return (
-    <Pressable onPress={onPress}>
+    <Pressable
+      onPress={onPress}
+      className={`self-start ${pressableBase} ${focusRing} ${linkHover}`}
+    >
       <Text className="text-sm text-cf-accent font-semibold">{label}</Text>
     </Pressable>
   )

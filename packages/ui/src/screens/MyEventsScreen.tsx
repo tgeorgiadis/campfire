@@ -1,19 +1,15 @@
 import type { CampfireListItem } from '@campfire/app-core'
 import type { ReactNode } from 'react'
 import { useState } from 'react'
-import { Pressable, Text, View } from 'react-native'
+import { Text, View } from 'react-native'
+import {
+  CampfireEventCard,
+  toEventCardData,
+} from '../components/brand/CampfireEventCard'
 import { EventShell, type EventNavTab } from '../components/EventShell'
 import { PrimaryButton } from '../components/PrimaryButton'
 import type { CampfireSummary } from '@campfire/app-core'
 import { CreateEventModal, type CreateEventFormData } from './CreateEventModal'
-
-function formatCreatedDate(timestamp: number): string {
-  return new Date(timestamp).toLocaleDateString(undefined, {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  })
-}
 
 export function MyEventsContent({
   slug,
@@ -70,28 +66,12 @@ export function MyEventsContent({
 
         <View className="flex-row flex-wrap gap-4">
           {events.map((event) => (
-            <Pressable
+            <CampfireEventCard
               key={event._id}
+              event={toEventCardData(event, slug)}
+              style="warm-header"
               onPress={() => onOpenEvent(event.slug)}
-              className="w-full sm:w-[calc(50%-0.5rem)] lg:w-[calc(33.333%-0.75rem)] border border-cf-card-border rounded-xl bg-cf-card overflow-hidden"
-            >
-              <View className="p-4 gap-3">
-                <Text className="text-lg font-semibold text-ig-text">{event.name}</Text>
-                <View className="gap-1">
-                  <Text className="text-sm text-ig-muted">
-                    {event.uploadCount} upload{event.uploadCount === 1 ? '' : 's'}
-                  </Text>
-                  <Text className="text-sm text-ig-muted">
-                    Created on {formatCreatedDate(event.createdAt)}
-                  </Text>
-                </View>
-              </View>
-              {event.slug === slug ? (
-                <View className="border-t border-ig-border bg-ig-page py-2 items-center">
-                  <Text className="text-sm font-semibold text-ig-text">Current Event</Text>
-                </View>
-              ) : null}
-            </Pressable>
+            />
           ))}
         </View>
       </View>

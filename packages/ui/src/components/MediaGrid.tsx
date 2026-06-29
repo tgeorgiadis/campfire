@@ -1,5 +1,6 @@
 import type { PhotoItem } from '@campfire/app-core'
 import { Image, Pressable, Text, View } from 'react-native'
+import { focusRing, pressableBase, tileInteractive } from './motion/motionClasses'
 
 export function MediaGrid({
   photos,
@@ -28,7 +29,10 @@ export function MediaGrid({
     <View className="flex-row flex-wrap gap-2">
       {photos.map((photo) => (
         <View key={photo._id} className="w-[calc(33.333%-6px)] min-w-[100px] aspect-square relative">
-          <Pressable onPress={() => onPhotoPress(photo)} className="w-full h-full">
+          <Pressable
+            onPress={() => onPhotoPress(photo)}
+            className={`w-full h-full ${tileInteractive} ${focusRing}`}
+          >
             {photo.mediaType === 'text' ? (
               <View
                 className={`w-full h-full rounded items-center justify-center p-2 ${textBgClass(photo.textBackground)}`}
@@ -77,7 +81,7 @@ function ActionChip({ label, onPress }: { label: string; onPress: () => void }) 
   return (
     <Pressable
       onPress={onPress}
-      className="bg-black/70 rounded px-1.5 py-0.5"
+      className={`bg-black/70 rounded px-1.5 py-0.5 ${pressableBase} hover:bg-black/90 active:scale-95 ${focusRing}`}
     >
       <Text className="text-[10px] text-white">{label}</Text>
     </Pressable>
