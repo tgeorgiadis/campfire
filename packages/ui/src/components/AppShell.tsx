@@ -3,6 +3,7 @@ import { Pressable, ScrollView, Text, View } from 'react-native'
 import { SidebarNavItem } from './CampfireAvatar'
 import { CampfireLogo } from './CampfireLogo'
 import { focusRing, pressableBase, tabHover } from './motion/motionClasses'
+import { sidebarChromeLogoBadge, sidebarChromeLogoWrap, sidebarChromeShell } from './motion/sidebarChromeClasses'
 
 export type AppShellTab = 'home' | 'create' | 'profile'
 
@@ -25,28 +26,38 @@ export function AppShell({
     <View className="flex-1 min-h-screen bg-ig-page font-sans">
       <View className="flex-1 flex-row w-full">
         {showNav ? (
-          <View className="hidden md:flex w-[244px] shrink-0 border-r border-ig-border bg-ig-surface px-3 py-6 fixed left-0 top-0 bottom-0 z-10">
-            <View className="px-3 mb-8">
-              <CampfireLogo size="sm" />
+          <View
+            className={`hidden md:flex w-[244px] shrink-0 px-4 py-5 fixed left-0 top-0 bottom-0 z-10 ${sidebarChromeShell}`}
+          >
+            <View className={sidebarChromeLogoWrap}>
+              <View className={sidebarChromeLogoBadge}>
+                <CampfireLogo size="sm" theme="light" />
+              </View>
             </View>
-            <View className="gap-1">
+            <View className="gap-0.5 px-0.5">
               <SidebarNavItem
                 icon="⌂"
                 label="Home"
                 active={activeTab === 'home'}
                 onPress={onHome}
+                variant="chrome"
+                accent
               />
               <SidebarNavItem
                 icon="＋"
                 label="Create"
                 active={activeTab === 'create'}
                 onPress={onCreate}
+                variant="chrome"
+                accent
               />
               <SidebarNavItem
                 icon="☺"
                 label="Profile"
                 active={activeTab === 'profile'}
                 onPress={onProfile}
+                variant="chrome"
+                accent
               />
             </View>
           </View>

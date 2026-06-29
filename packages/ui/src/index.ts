@@ -1,4 +1,21 @@
 export {
+  SidebarChromeComparison,
+  SidebarChromePreview,
+  SIDEBAR_CHROME_GROUPS,
+  SIDEBAR_CHROME_GROUP_LABELS,
+  SIDEBAR_CHROME_STRATEGIES,
+  type SidebarChromeGroup,
+  type SidebarChromeId,
+  type SidebarChromeStrategy,
+} from './components/brand/SidebarChromePreview'
+export {
+  ColorSchemeComparison,
+  ColorSchemePreview,
+  COLOR_SCHEMES,
+  type ColorScheme,
+  type ColorSchemeId,
+} from './components/brand/ColorSchemePreview'
+export {
   BackgroundStrategyComparison,
   BackgroundStrategyPreview,
   BACKGROUND_STRATEGIES,

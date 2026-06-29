@@ -78,23 +78,23 @@ Tokens are defined in `packages/ui/src/global.css` and exposed as Tailwind class
 
 | Role | Token | Hex | Usage |
 |------|-------|-----|-------|
-| Primary / Accent | `cf-accent` | `#FF5E3A` | CTAs, links, active nav, flame core |
-| Accent light | `cf-accent-light` | `#FFF0E6` | Badges, selected pills, subtle highlights |
+| Primary / Accent | `cf-accent` | `#E5634D` | CTAs, links, active nav, flame core (Coral Bloom) |
+| Accent light | `cf-accent-light` | `#FFF0ED` | Badges, selected pills, subtle highlights |
 | Flame mid | `cf-flame-orange` | `#FF8A3D` | Gradients, illustrations, secondary emphasis |
 | Flame highlight | `cf-flame-yellow` | `#FFC24D` | Warm accents, celebratory moments |
 | Flame red (alias) | `cf-flame-red` | `#FF5E3A` | Same as accent; use for flame imagery |
-| Page / warmth | `cf-cream` / `ig-page` | `#FFF7EC` | App background — firelight on faces |
+| Page / warmth | `cf-cream` / `ig-page` | `#FFFFFF` | App background — crisp white (Coral Bloom) |
 | Page preview — neutral | `cf-page-neutral` | `#FAFAF8` | Storyboard option: softer warm white |
 | Page preview — deep | `cf-page-deep` | `#F5EDE3` | Storyboard option: richer cream |
 | Card surface (legacy) | `cf-card` | `#FFF7EC` | **Deprecated for cards** — same hex as page; use elevated white |
 | Elevated surface | `cf-surface-elevated` / `ig-surface` | `#FFFFFF` | Cards, modals, sidebar — white on warm page |
-| Card border | `cf-card-border` | `#FFD4B8` | Warm card outlines |
+| Card border | `cf-card-border` | `#F5C4B8` | Warm card outlines |
 | Text primary | `ig-text` / `cf-charcoal` | `#2E3138` | Headlines, body |
 | Text muted | `ig-muted` / `cf-gray` | `#49505A` | Secondary copy |
-| Border | `ig-border` | `#E8DFD4` | Dividers — warm gray, not cool gray |
+| Border | `ig-border` | `#E8E4E0` | Dividers — warm gray, not cool gray |
 | Error | `ig-red` | `#ED4956` | Errors only — do not use for brand accent |
 
-**Accessibility:** Primary CTA `#FF5E3A` on white passes AA for large text. Use `cf-charcoal` text on cream for body. White text on `cf-accent` for buttons.
+**Accessibility:** Primary CTA `#E5634D` on white passes AA for large text. Use `cf-charcoal` text on white for body. White text on `cf-accent` for buttons.
 
 **Do not:** Introduce cool blues/grays as brand colors. Do not use `ig-red` or error colors for marketing accents.
 
@@ -124,7 +124,9 @@ Tokens are defined in `packages/ui/src/global.css` and exposed as Tailwind class
 --color-cf-surface-elevated: #ffffff;
 ```
 
-Default event theme color in the backend: `#FF5E3A` (`packages/backend/convex/lib/defaults.ts`).
+Default event theme color in the backend: `#E5634D` (`packages/backend/convex/lib/defaults.ts`).
+
+**Production palette:** Coral Bloom (`coral-bloom` on `/brand`) — white page, coral accent, warm borders.
 
 ### Surface hierarchy
 
@@ -145,6 +147,41 @@ Shadow is applied via `ElevatedSurface` (`CF_SHADOW_SM` in `packages/ui/src/comp
 
 **Motion:** Interactions should feel warm and fluid — gentle hover lifts, smooth toggle slides, and press feedback — not stiff enterprise SaaS. See `docs/UX-FOUNDATION.md` (Motion section) for durations and reduced-motion rules.
 
+### Color scheme exploration (storyboard)
+
+Six full palettes are previewed side by side on `/brand`. **Coral Bloom** is production today; others remain available for comparison.
+
+| ID | Name | Page | Accent | Personality |
+|----|------|------|--------|-------------|
+| `coral-bloom` | Coral Bloom | `#FFFFFF` | `#E5634D` | Crisp white page, softer coral CTA (production) |
+| `ember-classic` | Ember Classic | `#FFF7EC` | `#FF5E3A` | Firelight on faces — warm, energetic |
+| `clean-stone` | Clean Stone | `#F8F7F5` | `#FF5E3A` | Same accent, calmer stone page — less yellow |
+| `terracotta-dusk` | Terracotta Dusk | `#F4EFEA` | `#C84B31` | Earthy burnt orange — grounded, less neon |
+| `golden-gather` | Golden Gather | `#FFFBF5` | `#D4920A` | Amber gold — celebratory without loud orange |
+| `dusk-wine` | Dusk Wine | `#F5F3F0` | `#9B4D55` | Muted rose/wine — evening, sophisticated |
+
+Definitions live in `packages/ui/src/components/brand/colorSchemes.ts`. Production tokens are in `global.css` (`@theme` block).
+
+### Sidebar chrome exploration (storyboard)
+
+Under Coral Bloom, sidebar and page are both white (`ig-surface` = `ig-page`) — only a border separates them. Nine left-nav treatments are previewed on `/brand`, grouped by style (Coral Bloom content, varying sidebar only).
+
+| Group | ID | Name | Sidebar bg | Active nav |
+|-------|-----|------|------------|------------|
+| Light & tinted | `current-flat` | Flat white (today) | `#FFFFFF` | `#FFF0ED` pill + coral text |
+| Light & tinted | `coral-wash` | Coral wash | `#FFF0ED` | White pill + coral text |
+| Light & tinted | `warm-stone` | Warm stone | `#F5F3F0` | White pill + coral text |
+| Light & tinted | `soft-blush` | Soft blush border | `#FFF0ED` + `#F5C4B8` border | White inset + coral text |
+| Warm solid | `coral-bold` | Coral bold | `#E5634D` | White pill + coral text |
+| Warm solid | `ember-orange` | Ember orange | `#FF5E3A` | White pill + ember text |
+| Warm solid | `terracotta-solid` | Terracotta solid | `#C84B31` | White pill + terracotta text |
+| Warm solid | `deep-rust` | Deep rust | `#A84838` | White pill + rust text |
+| Dark anchor | `charcoal-anchor` | Charcoal anchor | `#2E3138` | `#FFF0ED` pill + coral text |
+
+**Production sidebar:** Coral bold (`coral-bold`) — `ig-chrome` `#E5634D`, white nav labels, white active pill. Applied in `EventShell` and `AppShell` (desktop). Mobile tab bar unchanged.
+
+Definitions live in `packages/ui/src/components/brand/sidebarChromeStrategies.ts`. Tokens in `global.css` (`ig-chrome-*`).
+
 ### Background strategy options
 
 Review all three on `/brand` before Phase 2 rollout:
@@ -155,7 +192,7 @@ Review all three on `/brand` before Phase 2 rollout:
 | Neutral page + white cards | `cf-page-neutral` | `#FAFAF8` | More contrast; slightly less “firelight” |
 | Deep cream + white cards | `cf-page-deep` | `#F5EDE3` | Richest page tone; strongest card separation |
 
-**Selection workflow:** Open `/brand` → pick background + logo lockup → Phase 2 updates `ig-page` and card components app-wide.
+**Selection workflow:** Open `/brand` → pick color scheme + background + logo lockup → follow-up updates `ig-page`, accent tokens, and card components app-wide.
 
 ### Logo system
 

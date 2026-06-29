@@ -7,26 +7,33 @@
 @theme {
   --color-cf-flame-yellow: #ffc24d;
   --color-cf-flame-orange: #ff8a3d;
-  --color-cf-flame-red: #ff5e3a;
+  --color-cf-flame-red: #e5634d;
   --color-cf-charcoal: #2e3138;
   --color-cf-gray: #49505a;
-  --color-cf-cream: #fff7ec;
-  --color-ig-page: #fff7ec;
+  --color-cf-cream: #ffffff;
+  --color-ig-page: #ffffff;
   --color-ig-surface: #ffffff;
-  --color-ig-border: #e8dfd4;
+  --color-ig-border: #e8e4e0;
   --color-ig-text: #2e3138;
   --color-ig-muted: #49505a;
-  --color-ig-blue: #ff5e3a;
+  --color-ig-blue: #e5634d;
   --color-ig-red: #ed4956;
-  --color-cf-accent: #ff5e3a;
-  --color-cf-accent-light: #fff0e6;
-  --color-cf-card: #fff7ec;
-  --color-cf-card-border: #ffd4b8;
-  /* Preview page backgrounds (storyboard — Phase 2 picks one for ig-page) */
-  --color-cf-page-current: #fff7ec;
+  --color-cf-accent: #e5634d;
+  --color-cf-accent-light: #fff0ed;
+  --color-cf-card: #ffffff;
+  --color-cf-card-border: #f5c4b8;
+  /* Preview page backgrounds (storyboard) */
+  --color-cf-page-current: #ffffff;
   --color-cf-page-neutral: #fafaf8;
   --color-cf-page-deep: #f5ede3;
   --color-cf-surface-elevated: #ffffff;
+  /* Sidebar chrome — Coral bold */
+  --color-ig-chrome: #e5634d;
+  --color-ig-chrome-border: #d04a38;
+  --color-ig-chrome-muted: #ffd9d0;
+  --color-ig-chrome-inset: #d04a38;
+  --color-ig-chrome-inset-border: #c84332;
+  --color-ig-chrome-foreground: #ffffff;
   --duration-fast: 150ms;
   --duration-normal: 200ms;
   --duration-slow: 300ms;

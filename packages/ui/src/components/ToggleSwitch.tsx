@@ -2,8 +2,8 @@ import { useEffect, useRef } from 'react'
 import { Animated, Easing, Pressable } from 'react-native'
 import { focusRing, pressableBase } from './motion/motionClasses'
 
-const TRACK_OFF = '#E8DFD4'
-const TRACK_ON = '#FF5E3A'
+const TRACK_OFF = '#E8E4E0'
+const TRACK_ON = '#E5634D'
 const THUMB_TRAVEL = 20
 
 export function ToggleSwitch({

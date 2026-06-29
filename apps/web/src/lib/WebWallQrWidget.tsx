@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { QrCanvas } from '~/lib/QrCanvas'
 
-const ACCENT = '#FF5E3A'
+const ACCENT = '#E5634D'
 const MIN_SIZE = 160
 const MAX_SIZE = 360
 const SIZE_STEP = 40

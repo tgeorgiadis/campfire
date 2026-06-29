@@ -41,7 +41,7 @@ export const DEFAULT_CAMPFIRE_SETTINGS: CampfireSettings = {
   eventDate: undefined,
   eventType: 'party',
   logoStorageId: undefined,
-  themeColor: '#FF5E3A',
+  themeColor: '#E5634D',
   displayLanguage: 'automatic',
   welcomeScreenEnabled: false,
   welcomeScreenTitle: undefined,

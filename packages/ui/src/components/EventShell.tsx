@@ -4,6 +4,19 @@ import type { CampfireSummary } from '@campfire/app-core'
 import { SidebarNavItem } from './CampfireAvatar'
 import { CampfireLogo } from './CampfireLogo'
 import { focusRing, linkHover, pressableBase, tabHover } from './motion/motionClasses'
+import {
+  sidebarChromeCreateButton,
+  sidebarChromeDivider,
+  sidebarChromeEventSelect,
+  sidebarChromeLink,
+  sidebarChromeLogoBadge,
+  sidebarChromeLogoWrap,
+  sidebarChromeMuted,
+  sidebarChromeSectionDivider,
+  sidebarChromeShell,
+  sidebarChromeText,
+  chromeFocusRing,
+} from './motion/sidebarChromeClasses'
 
 export type EventNavTab = 'home' | 'photos' | 'settings' | 'events'
 
@@ -37,30 +50,38 @@ export function EventShell({
 }) {
   const current = campfires.find((c) => c.slug === slug)
 
-  const createCampfireLink =
+  const createCampfireLink = (chrome = false) =>
     onCreateCampfire != null ? (
       <Pressable
         onPress={onCreateCampfire}
-        className={`mt-2 px-1 rounded ${pressableBase} ${focusRing} ${linkHover}`}
+        className={`${pressableBase} ${chrome ? `${chromeFocusRing} ${sidebarChromeCreateButton}` : `mt-2 px-1 rounded ${focusRing} ${linkHover}`}`}
       >
-        <Text className="text-sm font-semibold text-cf-accent">+ Create new campfire</Text>
+        <Text
+          className={`text-sm font-semibold text-center ${chrome ? sidebarChromeLink : 'text-cf-accent'}`}
+        >
+          + Create new campfire
+        </Text>
       </Pressable>
     ) : null
 
-  const currentEventHeader = (
-    <View className="gap-2">
-      <View className="flex-row items-center justify-between px-1">
-        <Text className="text-xs font-semibold text-ig-muted uppercase">
+  const currentEventHeader = (chrome = false) => (
+    <View className="gap-2.5">
+      <View className="flex-row items-center justify-between">
+        <Text
+          className={`text-[11px] font-semibold uppercase ${
+            chrome ? sidebarChromeMuted : 'text-ig-muted'
+          }`}
+        >
           Current Event
         </Text>
         {onViewAllEvents != null ? (
           <Pressable
             onPress={onViewAllEvents}
-            className={`rounded ${pressableBase} ${focusRing} ${linkHover}`}
+            className={`rounded ${pressableBase} ${chrome ? chromeFocusRing : focusRing} ${chrome ? 'hover:opacity-80' : linkHover}`}
           >
             <Text
-              className={`text-xs font-semibold ${
-                activeTab === 'events' ? 'text-cf-accent' : 'text-cf-accent'
+              className={`text-[11px] font-semibold ${
+                chrome ? sidebarChromeLink : 'text-cf-accent'
               }`}
             >
               View All
@@ -68,62 +89,81 @@ export function EventShell({
           </Pressable>
         ) : null}
       </View>
-      <View className="border border-ig-border rounded-lg bg-ig-surface px-3 py-2">
+      <View
+        className={
+          chrome ? sidebarChromeEventSelect : 'border border-ig-border bg-ig-surface rounded-lg px-3 py-2'
+        }
+      >
         {eventSwitcher ?? (
-          <Text className="text-sm text-ig-text">{current?.name ?? slug}</Text>
+          <Text className="text-sm font-medium text-ig-text">{current?.name ?? slug}</Text>
         )}
       </View>
-      {createCampfireLink}
+      {createCampfireLink(chrome)}
     </View>
   )
 
   return (
     <View className="flex-1 min-h-screen bg-ig-page font-sans">
       <View className="flex-1 flex-row w-full">
-        <View className="hidden md:flex w-[260px] shrink-0 border-r border-ig-border bg-ig-surface px-4 py-6 fixed left-0 top-0 bottom-0 z-10">
-          <View className="px-2 mb-6">
-            <CampfireLogo size="sm" />
+        <View
+          className={`hidden md:flex w-[260px] shrink-0 px-4 py-5 fixed left-0 top-0 bottom-0 z-10 ${sidebarChromeShell}`}
+        >
+          <View className={sidebarChromeLogoWrap}>
+            <View className={sidebarChromeLogoBadge}>
+              <CampfireLogo size="sm" theme="light" />
+            </View>
           </View>
 
-          <View className="px-2 mb-4">{currentEventHeader}</View>
+          <View className="flex-1 flex-col px-0.5">
+            {currentEventHeader(true)}
 
-          <View className="gap-1 flex-1">
-            <SidebarNavItem
-              icon="⌂"
-              label="Home"
-              active={activeTab === 'home'}
-              onPress={() => onNavigate('home')}
-              onIntent={() => onNavIntent?.('home')}
-              accent
-            />
-            <SidebarNavItem
-              icon="▦"
-              label="Photos & Videos"
-              active={activeTab === 'photos'}
-              onPress={() => onNavigate('photos')}
-              onIntent={() => onNavIntent?.('photos')}
-              accent
-            />
-            <SidebarNavItem
-              icon="⚙"
-              label="Event Settings"
-              active={activeTab === 'settings'}
-              onPress={() => onNavigate('settings')}
-              onIntent={() => onNavIntent?.('settings')}
-              accent
-            />
+            <View className={sidebarChromeSectionDivider} />
+
+            <View className="gap-0.5">
+              <SidebarNavItem
+                icon="⌂"
+                label="Home"
+                active={activeTab === 'home'}
+                onPress={() => onNavigate('home')}
+                onIntent={() => onNavIntent?.('home')}
+                accent
+                variant="chrome"
+              />
+              <SidebarNavItem
+                icon="▦"
+                label="Photos & Videos"
+                active={activeTab === 'photos'}
+                onPress={() => onNavigate('photos')}
+                onIntent={() => onNavIntent?.('photos')}
+                accent
+                variant="chrome"
+              />
+              <SidebarNavItem
+                icon="⚙"
+                label="Event Settings"
+                active={activeTab === 'settings'}
+                onPress={() => onNavigate('settings')}
+                onIntent={() => onNavIntent?.('settings')}
+                accent
+                variant="chrome"
+              />
+            </View>
           </View>
 
-          <View className="border-t border-ig-border pt-4 px-2 gap-1">
-            <Text className="text-xs font-semibold text-ig-muted">My Account</Text>
+          <View className={`border-t pt-4 gap-2 ${sidebarChromeDivider}`}>
+            <Text className={`text-[11px] font-semibold uppercase ${sidebarChromeMuted}`}>
+              My Account
+            </Text>
             {userEmail ? (
-              <Text className="text-xs text-ig-text truncate">{userEmail}</Text>
+              <Text className={`text-xs truncate mt-1 ${sidebarChromeText} opacity-90`}>
+                {userEmail}
+              </Text>
             ) : null}
             <Pressable
               onPress={onSignOut}
-              className={`mt-2 rounded ${pressableBase} ${focusRing} ${linkHover}`}
+              className={`rounded ${pressableBase} ${chromeFocusRing} hover:opacity-80 active:opacity-70 px-0.5`}
             >
-              <Text className="text-xs text-cf-accent">Sign out</Text>
+              <Text className={`text-xs font-medium ${sidebarChromeLink}`}>Sign out</Text>
             </Pressable>
           </View>
         </View>
@@ -131,7 +171,7 @@ export function EventShell({
         <View className="flex-1 w-full md:ml-[260px] pb-16 md:pb-0">
           <View className="md:hidden border-b border-ig-border bg-ig-surface px-4 py-3 gap-2">
             <CampfireLogo size="sm" />
-            {currentEventHeader}
+            {currentEventHeader(false)}
           </View>
           <View className={`max-w-[1100px] w-full px-4 py-6 ${contentDimmed ? 'opacity-50' : ''}`}>
             {children}

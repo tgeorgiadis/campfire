@@ -161,7 +161,7 @@ export const STORYBOARD_EVENT_CARDS: CampfireEventCardData[] = [
     createdDate: '26 Jun 2026',
     uploadCount: 1,
     isCurrent: true,
-    themeColor: '#FF5E3A',
+    themeColor: '#E5634D',
   },
   {
     name: "bobby's bbq1",

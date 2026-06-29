@@ -1,5 +1,14 @@
 import { Pressable, Text, View } from 'react-native'
 import { focusRing, navItemHover, pressableBase } from './motion/motionClasses'
+import {
+  chromeFocusRing,
+  chromeNavActive,
+  chromeNavActiveIcon,
+  chromeNavActiveText,
+  chromeNavHover,
+  chromeNavInactiveIcon,
+  chromeNavInactiveText,
+} from './motion/sidebarChromeClasses'
 
 export function CampfireAvatar({
   name,
@@ -50,6 +59,7 @@ export function SidebarNavItem({
   onPress,
   onIntent,
   accent,
+  variant = 'default',
 }: {
   icon: string
   label: string
@@ -57,28 +67,41 @@ export function SidebarNavItem({
   onPress: () => void
   onIntent?: () => void
   accent?: boolean
+  variant?: 'default' | 'chrome'
 }) {
+  const isChrome = variant === 'chrome'
+
+  const containerClass = isChrome
+    ? `flex-row items-center gap-3 py-2.5 px-3 ${pressableBase} ${chromeFocusRing} ${
+        active ? chromeNavActive : chromeNavHover
+      }`
+    : `flex-row items-center gap-3 py-2.5 px-3 rounded-lg ${pressableBase} ${focusRing} ${
+        active && accent ? 'bg-cf-accent-light' : active ? '' : navItemHover
+      }`
+
+  const labelClass = isChrome
+    ? `text-sm ${active ? chromeNavActiveText : chromeNavInactiveText}`
+    : `text-sm ${
+        active && accent
+          ? 'font-semibold text-cf-accent'
+          : active
+            ? 'font-bold text-ig-text'
+            : 'text-ig-text'
+      }`
+
+  const iconClass = isChrome
+    ? `text-lg ${active ? chromeNavActiveIcon : chromeNavInactiveIcon}`
+    : 'text-lg'
+
   return (
     <Pressable
       onPress={onPress}
       onHoverIn={onIntent}
       onFocus={onIntent}
-      className={`flex-row items-center gap-3 py-2.5 px-3 rounded-lg ${pressableBase} ${focusRing} ${
-        active && accent ? 'bg-cf-accent-light' : active ? '' : navItemHover
-      }`}
+      className={containerClass}
     >
-      <Text className="text-lg">{icon}</Text>
-      <Text
-        className={`text-sm ${
-          active && accent
-            ? 'font-semibold text-cf-accent'
-            : active
-              ? 'font-bold text-ig-text'
-              : 'text-ig-text'
-        }`}
-      >
-        {label}
-      </Text>
+      <Text className={iconClass}>{icon}</Text>
+      <Text className={labelClass}>{label}</Text>
     </Pressable>
   )
 }

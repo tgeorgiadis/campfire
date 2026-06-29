@@ -3,6 +3,14 @@ import { useState } from 'react'
 import { ScrollView, Text, View } from 'react-native'
 import { BackgroundStrategyComparison } from '../components/brand/BackgroundStrategyPreview'
 import {
+  ColorSchemeComparison,
+  type ColorSchemeId,
+} from '../components/brand/ColorSchemePreview'
+import {
+  SidebarChromeComparison,
+  type SidebarChromeId,
+} from '../components/brand/SidebarChromePreview'
+import {
   CampfireEventCard,
   STORYBOARD_EVENT_CARDS,
 } from '../components/brand/CampfireEventCard'
@@ -24,24 +32,24 @@ const COLOR_SWATCHES: Array<{
   label: string
   darkText?: boolean
 }> = [
-  { token: 'cf-accent', bgClass: 'bg-cf-accent', hex: '#FF5E3A', label: 'Primary / accent' },
-  { token: 'cf-accent-light', bgClass: 'bg-cf-accent-light', hex: '#FFF0E6', label: 'Accent light', darkText: true },
+  { token: 'cf-accent', bgClass: 'bg-cf-accent', hex: '#E5634D', label: 'Primary / accent' },
+  { token: 'cf-accent-light', bgClass: 'bg-cf-accent-light', hex: '#FFF0ED', label: 'Accent light', darkText: true },
   { token: 'cf-flame-orange', bgClass: 'bg-cf-flame-orange', hex: '#FF8A3D', label: 'Flame mid' },
   { token: 'cf-flame-yellow', bgClass: 'bg-cf-flame-yellow', hex: '#FFC24D', label: 'Flame highlight', darkText: true },
-  { token: 'cf-flame-red', bgClass: 'bg-cf-flame-red', hex: '#FF5E3A', label: 'Flame red' },
-  { token: 'cf-cream', bgClass: 'bg-cf-cream', hex: '#FFF7EC', label: 'Cream (legacy)', darkText: true },
-  { token: 'cf-page-current', bgClass: 'bg-cf-page-current', hex: '#FFF7EC', label: 'Page — warm cream', darkText: true },
+  { token: 'cf-flame-red', bgClass: 'bg-cf-flame-red', hex: '#E5634D', label: 'Flame red' },
+  { token: 'cf-cream', bgClass: 'bg-cf-cream', hex: '#FFFFFF', label: 'Cream (legacy)', darkText: true },
+  { token: 'cf-page-current', bgClass: 'bg-cf-page-current', hex: '#FFFFFF', label: 'Page — white', darkText: true },
   { token: 'cf-page-neutral', bgClass: 'bg-cf-page-neutral', hex: '#FAFAF8', label: 'Page — neutral', darkText: true },
   { token: 'cf-page-deep', bgClass: 'bg-cf-page-deep', hex: '#F5EDE3', label: 'Page — deep cream', darkText: true },
-  { token: 'cf-card', bgClass: 'bg-cf-card', hex: '#FFF7EC', label: 'Card (legacy)', darkText: true },
+  { token: 'cf-card', bgClass: 'bg-cf-card', hex: '#FFFFFF', label: 'Card (legacy)', darkText: true },
   { token: 'cf-surface-elevated', bgClass: 'bg-cf-surface-elevated', hex: '#FFFFFF', label: 'Elevated surface', darkText: true },
-  { token: 'cf-card-border', bgClass: 'bg-cf-card-border', hex: '#FFD4B8', label: 'Card border', darkText: true },
+  { token: 'cf-card-border', bgClass: 'bg-cf-card-border', hex: '#F5C4B8', label: 'Card border', darkText: true },
   { token: 'ig-surface', bgClass: 'bg-ig-surface', hex: '#FFFFFF', label: 'Surface', darkText: true },
   { token: 'ig-text', bgClass: 'bg-ig-text', hex: '#2E3138', label: 'Text primary' },
   { token: 'cf-charcoal', bgClass: 'bg-cf-charcoal', hex: '#2E3138', label: 'Charcoal' },
   { token: 'ig-muted', bgClass: 'bg-ig-muted', hex: '#49505A', label: 'Text muted' },
   { token: 'cf-gray', bgClass: 'bg-cf-gray', hex: '#49505A', label: 'Gray' },
-  { token: 'ig-border', bgClass: 'bg-ig-border', hex: '#E8DFD4', label: 'Border', darkText: true },
+  { token: 'ig-border', bgClass: 'bg-ig-border', hex: '#E8E4E0', label: 'Border', darkText: true },
   { token: 'ig-red', bgClass: 'bg-ig-red', hex: '#ED4956', label: 'Error only' },
 ]
 
@@ -103,6 +111,8 @@ export function BrandStoryboardScreen() {
   const [demoText, setDemoText] = useState('Summer BBQ 2026')
   const [toggleOn, setToggleOn] = useState(true)
   const [selectedType, setSelectedType] = useState<(typeof EVENT_TYPE_OPTIONS)[number]['id']>('party')
+  const [highlightedSchemeId, setHighlightedSchemeId] = useState<ColorSchemeId | null>(null)
+  const [highlightedSidebarId, setHighlightedSidebarId] = useState<SidebarChromeId | null>(null)
 
   return (
     <ScrollView className="flex-1 bg-ig-page">
@@ -118,15 +128,51 @@ export function BrandStoryboardScreen() {
             so memories feel collective, not solitary.
           </Text>
           <Text className="text-xs text-ig-muted max-w-xl mt-2">
-            Phase 1 exploration — pick a background strategy and logo lockup here, then Phase 2
-            rolls out across the app.
+            Explore color schemes, sidebar chrome, and page backgrounds here — pick directions on
+            this page, then we roll winners out app-wide.
           </Text>
         </View>
 
+        <Section title="Color scheme exploration">
+          <Text className="text-sm text-ig-muted">
+            Six full palettes side by side — page, accent, cards, and controls together. Click a
+            panel to highlight a favorite while you compare. Production today is Coral Bloom.
+          </Text>
+          <Text className="text-xs text-ig-muted">
+            Compare page warmth, CTA feel, and card contrast together — not just the background
+            alone.
+          </Text>
+          <ColorSchemeComparison
+            highlightedSchemeId={highlightedSchemeId}
+            onHighlightScheme={(id) =>
+              setHighlightedSchemeId((current) => (current === id ? null : id))
+            }
+          />
+        </Section>
+
+        <Section title="Sidebar chrome exploration">
+          <Text className="text-sm text-ig-muted">
+            With a white page under Coral Bloom, the left nav needs its own surface to anchor the
+            shell. Nine treatments grouped by style — click to highlight a favorite. Desktop
+            sidebar only; mobile tab bar unchanged.
+          </Text>
+          <Text className="text-xs text-ig-muted">
+            Try <Text className="font-semibold text-ig-text">Warm solid</Text> for red and orange
+            sidebars, or <Text className="font-semibold text-ig-text">Dark anchor</Text> for
+            charcoal — compare separation from content and active-state clarity.
+          </Text>
+          <SidebarChromeComparison
+            highlightedId={highlightedSidebarId}
+            onHighlight={(id) =>
+              setHighlightedSidebarId((current) => (current === id ? null : id))
+            }
+          />
+        </Section>
+
         <Section title="Background strategies">
           <Text className="text-sm text-ig-muted">
-            Three page-background options with white elevated cards. Recommended default: warm cream
-            page + white cards — fixes today&apos;s cream-on-cream contrast issue.
+            Page-neutral options only — accent stays orange. Use the color scheme section above for
+            full palette decisions including accent color.
           </Text>
           <BackgroundStrategyComparison />
         </Section>

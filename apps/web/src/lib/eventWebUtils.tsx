@@ -5,15 +5,21 @@ export function WebEventSelect({
   campfires,
   onSwitchEvent,
   onPrefetchSlug,
+  variant = 'default',
 }: {
   slug: string
   campfires: Array<CampfireSummary>
   onSwitchEvent: (slug: string) => void
   onPrefetchSlug?: (slug: string) => void
+  variant?: 'default' | 'chrome'
 }) {
-  return (
+  const select = (
     <select
-      className="w-full bg-transparent text-sm text-ig-text outline-none border-0"
+      className={`w-full cursor-pointer bg-transparent outline-none border-0 appearance-none ${
+        variant === 'chrome'
+          ? 'min-h-[24px] pr-7 text-sm font-medium text-ig-text'
+          : 'text-sm text-ig-text pr-6'
+      }`}
       value={slug}
       onFocus={() => {
         for (const c of campfires) {
@@ -33,6 +39,22 @@ export function WebEventSelect({
       ))}
     </select>
   )
+
+  if (variant === 'chrome') {
+    return (
+      <div className="relative w-full flex items-center">
+        {select}
+        <span
+          className="pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 text-ig-muted text-xs leading-none"
+          aria-hidden
+        >
+          ▾
+        </span>
+      </div>
+    )
+  }
+
+  return select
 }
 
 export function WebDateInput({

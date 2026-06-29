@@ -84,6 +84,7 @@ export function EventManagerLayout({ slug }: { slug: string }) {
         slug={slug}
         campfires={manager.campfires}
         onSwitchEvent={manager.nav.onSwitchEvent}
+        variant="chrome"
         onPrefetchSlug={(nextSlug) => {
           prefetchCampfireDashboard(queryClient, nextSlug)
         }}

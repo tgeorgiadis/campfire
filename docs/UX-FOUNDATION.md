@@ -2,7 +2,7 @@
 
 Technical architecture and layout system for Campfire. Complements [`BRAND.md`](BRAND.md) (strategy and voice) with implementable structure for developers and agents.
 
-**Live storyboard:** run the app and open [`/brand`](/brand) to preview tokens and components.
+**Live storyboard:** run the app and open [`/brand`](/brand) to preview tokens and components. The **Color scheme exploration** section shows six full palettes (page + accent + surfaces) side by side — use it to pick a direction before updating `global.css`.
 
 ---
 
@@ -81,7 +81,7 @@ Logo wordmark sizes: `CampfireLogo` `sm` / `md` / `lg` in `CampfireLogo.tsx`.
 
 ### Shells
 
-- **EventShell** — fixed 260px sidebar (desktop), bottom tabs (mobile), cream page
+- **EventShell** — fixed 260px sidebar (desktop), bottom tabs (mobile), white page (Coral Bloom). Sidebar chrome options on `/brand` → Sidebar chrome exploration
 - **AppShell** — 244px sidebar (legacy profile/create)
 - **Photo wall** — fullscreen black, minimal floating chrome
 
